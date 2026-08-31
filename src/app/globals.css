@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Paws Pannai Retreat — design tokens
+   Palette from Website IA §07 (PPRPPP logo brief)
+   ------------------------------------------------------------------ */
+
+@theme {
+  /* Brand */
+  --color-canopy-50: #f0f6f0;
+  --color-canopy-100: #dceadd;
+  --color-canopy-200: #b9d5bb;
+  --color-canopy-300: #8bb98f;
+  --color-canopy-400: #57975d;
+  --color-canopy-500: #2f7a37;
+  --color-canopy-600: #1b5e20; /* Canopy Green — primary */
+  --color-canopy-700: #164e1a;
+  --color-canopy-800: #123d15;
+  --color-canopy-900: #0d2c0f;
+
+  --color-mango-50: #fff8e8;
+  --color-mango-100: #ffedc4;
+  --color-mango-200: #ffdd91;
+  --color-mango-300: #fdc75a;
+  --color-mango-400: #f9a825; /* Mango Gold — CTAs */
+  --color-mango-500: #e08f10;
+  --color-mango-600: #b8720b;
+
+  --color-pool-50: #eaf2fc;
+  --color-pool-100: #cfe0f7;
+  --color-pool-300: #6fa4e4;
+  --color-pool-500: #1565c0; /* Pool Blue — secondary accent */
+  --color-pool-600: #10529c;
+
+  --color-tamarind-100: #f7e6d2;
+  --color-tamarind-300: #dda45c;
+  --color-tamarind-500: #bf6b0a; /* Tamarind Amber — warm accent */
+  --color-tamarind-600: #9a5507;
+
+  --color-floor-500: #5c433c;
+  --color-floor-700: #4a322c;
+  --color-floor-900: #3e2723; /* Forest Floor — dark anchor */
+
+  /* Neutrals — warm, paper-like, never cold grey */
+  --color-bone-50: #fbfaf5;
+  --color-bone-100: #f4f2e9;
+  --color-bone-200: #eceadd;
+  --color-bone-300: #ddd9c6;
+  --color-bone-400: #b9b3a0;
+  --color-bone-600: #6f6a5c;
+  --color-bone-700: #524e43;
+
+  /* Type */
+  --font-display: "Fraunces Variable", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --background: var(--color-bone-100);
+  --foreground: var(--color-floor-900);
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-pool-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-mango-200);
+    color: var(--color-floor-900);
+  }
+}
+
+@layer components {
+  /* Thin rule used between content bands */
+  .hairline {
+    border-color: color-mix(in oklab, var(--color-floor-900) 12%, transparent);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Dappled shade — a soft, organic light wash used behind dark bands */
+  .dapple {
+    background-image:
+      radial-gradient(
+        60rem 40rem at 15% -10%,
+        color-mix(in oklab, var(--color-canopy-400) 22%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        45rem 35rem at 95% 10%,
+        color-mix(in oklab, var(--color-tamarind-500) 18%, transparent),
+        transparent 65%
+      );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
