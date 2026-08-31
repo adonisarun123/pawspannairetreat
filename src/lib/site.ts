@@ -12,6 +12,13 @@ export const site = {
   gbpName: "Paws Pannai Retreat - Pets Park & Pool",
   /** Social/OG share card, 1200x630. */
   ogImage: "/og.jpg",
+  /**
+   * Brand assets. The mark is a negative-space design — the dog's face is
+   * the background showing through — so both files only work on a light
+   * ground. Never place them on floor-900 or canopy-600.
+   */
+  logoMark: "/logo-mark.png",
+  logoLockup: "/logo.png",
   tagline: "Pet Play & Pool",
   /** Used for canonical URLs, sitemap and JSON-LD. */
   url: "https://www.pawspannairetreat.com",
@@ -100,16 +107,13 @@ export const facts = {
 } as const;
 
 /**
- * Distances to the gate. `confirmed: true` means measured and signed off;
- * the other two are inherited estimates and should not be quoted in prose
- * until they are checked.
+ * Measured distances to the gate. Every locality quoted anywhere on the site
+ * must appear here — no estimates. Add a row only once the figure is real.
  */
 export const driveTimes = [
-  { from: "Hosur", detail: "25.2 km", confirmed: true },
-  { from: "Sarjapur Road", detail: "30 km via Hosur Rd", confirmed: false },
-  { from: "Whitefield", detail: "44.9 km", confirmed: true },
-  { from: "Electronic City", detail: "50 km", confirmed: false },
-  { from: "HSR Layout", detail: "58.3 km", confirmed: true },
+  { from: "Hosur", detail: "25.2 km" },
+  { from: "Whitefield", detail: "44.9 km" },
+  { from: "HSR Layout", detail: "58.3 km" },
 ] as const;
 
 export function whatsappLink(message: string): string {

@@ -8,7 +8,7 @@ import { location } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Dog park near Bangalore — by neighbourhood",
   description:
-    "How to reach Paws Pannai Retreat from Hosur, Sarjapur Road, Whitefield, Electronic City and HSR Layout — distances, routes and what suits each drive. An off-leash dog park and dog pool near Hosur.",
+    "How to reach Paws Pannai Retreat from Hosur, Whitefield and HSR Layout — measured distances, routes and what suits each drive. An off-leash dog park and dog pool near Hosur.",
   path: "/dog-park-near",
 });
 

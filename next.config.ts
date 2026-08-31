@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
       { source: "/organic-farm", destination: "/our-story/the-wider-farm", permanent: true },
       { source: "/sustainability", destination: "/our-story", permanent: true },
       { source: "/about", destination: "/our-story", permanent: true },
+      // Withdrawn until the distances are measured.
+      { source: "/dog-park-near/sarjapur-road", destination: "/dog-park-near", permanent: false },
+      { source: "/dog-park-near/electronic-city", destination: "/dog-park-near", permanent: false },
     ];
   },
 };

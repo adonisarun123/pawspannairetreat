@@ -23,6 +23,7 @@ const routes: { path: string; priority: number; changeFrequency: "weekly" | "mon
     { path: "/plan-your-visit/faq", priority: 0.85, changeFrequency: "monthly" },
     { path: "/plan-your-visit/park-rules", priority: 0.7, changeFrequency: "monthly" },
     { path: "/plan-your-visit/getting-here", priority: 0.85, changeFrequency: "monthly" },
+    { path: "/dog-park-vs-daycare-vs-boarding", priority: 0.85, changeFrequency: "monthly" },
     { path: "/dog-park-near", priority: 0.8, changeFrequency: "monthly" },
     ...localities.map((l) => ({
       path: `/dog-park-near/${l.slug}`,

@@ -271,8 +271,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {driveTimes.slice(0, 4).map((d) => (
+            <ul className="grid gap-3">
+              {driveTimes.map((d) => (
                 <li
                   key={d.from}
                   className="flex items-baseline justify-between gap-4 rounded-2xl border border-floor-900/10 bg-bone-50 px-5 py-4"

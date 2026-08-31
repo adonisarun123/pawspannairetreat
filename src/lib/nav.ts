@@ -59,6 +59,7 @@ export const primaryNav: NavItem[] = [
       { label: "Park Rules", href: "/plan-your-visit/park-rules" },
       { label: "Getting Here", href: "/plan-your-visit/getting-here" },
       { label: "From Your Neighbourhood", href: "/dog-park-near" },
+      { label: "Park, Daycare or Boarding?", href: "/dog-park-vs-daycare-vs-boarding" },
     ],
   },
 ];

@@ -43,6 +43,7 @@ of a working farm at ${location.fullAddress}. It is operated by ${family.company
 - Pawsum Pet Retreat — an unrelated pet activity property in North India
 
 ${site.name} is in Tamil Nadu, near Hosur, and does not offer boarding, grooming or daycare.
+The difference between a dog park, daycare and boarding is set out at ${url}/dog-park-vs-daycare-vs-boarding.
 
 ## What is on site
 
@@ -88,6 +89,7 @@ ${faqs.map((f) => `### ${f.q}\n\n${f.a}`).join("\n\n")}
 - ${url}/plan-your-visit/faq — full FAQ
 - ${url}/plan-your-visit/park-rules — rules
 - ${url}/our-story — how the park was built
+- ${url}/dog-park-vs-daycare-vs-boarding — dog park vs daycare vs boarding, and which one a visitor needs
 - ${url}/dog-park-near — distances and routes by Bangalore neighbourhood
 ${localities.map((l) => `- ${url}/dog-park-near/${l.slug} — from ${l.name}, ${l.distance}`).join("\n")}
 - ${url}/journal — articles

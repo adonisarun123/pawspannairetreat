@@ -48,7 +48,7 @@ export function localBusinessSchema() {
     alternateName: site.gbpName,
     additionalType: "https://www.wikidata.org/wiki/Q1195942",
     image: [new URL(site.ogImage, site.url).toString()],
-    logo: new URL(site.ogImage, site.url).toString(),
+    logo: new URL(site.logoMark, site.url).toString(),
     priceRange: "₹₹",
     hasMap: location.mapsLink,
     isAccessibleForFree: false,
@@ -142,7 +142,7 @@ export function articleSchema(post: {
     publisher: {
       "@type": "Organization",
       name: site.name,
-      logo: { "@type": "ImageObject", url: new URL(site.ogImage, site.url).toString() },
+      logo: { "@type": "ImageObject", url: new URL(site.logoMark, site.url).toString() },
     },
     isPartOf: { "@id": `${site.url}#business` },
   };

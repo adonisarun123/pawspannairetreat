@@ -61,7 +61,7 @@ export default function PlanYourVisitPage() {
             />
             <LinkCard
               title="Getting Here"
-              body="Drive times from Electronic City, Sarjapur, HSR, Whitefield and Hosur, plus the map and the last turn."
+              body="Distances from Hosur, Whitefield and HSR Layout, plus the map and the last turn."
               href="/plan-your-visit/getting-here"
               cta="Directions"
             />

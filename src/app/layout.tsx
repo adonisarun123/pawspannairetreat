@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "dog park near Bangalore",
     "dog swimming pool Bangalore",
     "pet friendly farm Hosur",
-    "dog day out Sarjapur",
+    "dog day out near Whitefield",
     "puppy play area Bangalore",
   ],
   openGraph: {

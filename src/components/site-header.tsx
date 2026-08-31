@@ -1,22 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { primaryNav } from "@/lib/nav";
-import { hours } from "@/lib/site";
+import { hours, site } from "@/lib/site";
 import { CTA, Container, cx } from "./ui";
-
-function PawMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden fill="currentColor">
-      <ellipse cx="9" cy="10" rx="3.1" ry="4" />
-      <ellipse cx="16" cy="7.6" rx="3.2" ry="4.2" />
-      <ellipse cx="23" cy="10" rx="3.1" ry="4" />
-      <path d="M16 14.4c4.3 0 7.8 3.2 7.8 7 0 3-2.3 4.6-5.1 4.6-1.1 0-1.9-.3-2.7-.3s-1.6.3-2.7.3c-2.8 0-5.1-1.6-5.1-4.6 0-3.8 3.5-7 7.8-7z" />
-    </svg>
-  );
-}
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -78,10 +68,17 @@ export function SiteHeader() {
           <div className="flex h-16 items-center justify-between gap-4 sm:h-20">
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2.5 text-floor-900"
+              className="flex shrink-0 items-center gap-3 text-floor-900"
               aria-label="Paws Pannai Retreat — home"
             >
-              <PawMark className="h-7 w-7 text-canopy-600" />
+              <Image
+                src={site.logoMark}
+                alt=""
+                width={512}
+                height={512}
+                priority
+                className="h-10 w-10 shrink-0 sm:h-[3.25rem] sm:w-[3.25rem]"
+              />
               <span className="flex flex-col leading-none">
                 <span className="font-display text-lg font-semibold sm:text-xl">Paws Pannai</span>
                 <span className="mt-0.5 text-[0.6rem] font-semibold tracking-[0.18em] text-canopy-600 uppercase">
