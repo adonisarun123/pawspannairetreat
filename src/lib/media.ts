@@ -18,6 +18,11 @@ export type MediaSlot = {
   height: number;
   /** CSS aspect-ratio value, used by the placeholder and the frame. */
   ratio: string;
+  /**
+   * CSS object-position. Set it where the subject sits off-centre, so the
+   * photograph survives being cropped into a different frame.
+   */
+  focus?: string;
   alt: string;
   /** Shown under the image where a caption is wanted. */
   caption?: string;
@@ -31,6 +36,7 @@ export const media = {
   // ---------------------------------------------------------------- real
   entranceArch: slot({
     id: "entrance-arch",
+    focus: "50% 35%",
     src: "/images/park/entrance-arch.jpg",
     width: 1000,
     height: 1333,
@@ -40,6 +46,7 @@ export const media = {
   }),
   tyreHill: slot({
     id: "tyre-hill",
+    focus: "50% 65%",
     src: "/images/park/tyre-hill.jpg",
     width: 1000,
     height: 1333,
@@ -49,6 +56,7 @@ export const media = {
   }),
   tyreJumpThrough: slot({
     id: "tyre-jump-through",
+    focus: "50% 62%",
     src: "/images/park/tyre-jump-through.jpg",
     width: 1000,
     height: 1333,
@@ -58,6 +66,7 @@ export const media = {
   }),
   fencedPlayZone: slot({
     id: "fenced-play-zone",
+    focus: "50% 60%",
     src: "/images/park/fenced-play-zone.jpg",
     width: 1000,
     height: 1333,
@@ -67,6 +76,7 @@ export const media = {
   }),
   boundarySignage: slot({
     id: "boundary-signage",
+    focus: "76% 62%",
     src: "/images/park/boundary-signage.jpg",
     width: 1000,
     height: 750,

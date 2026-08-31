@@ -50,7 +50,7 @@ export const faqs: QA[] = [
   },
   {
     q: "Where exactly are you, and how long is the drive?",
-    a: `${location.addressLine}. Roughly 45 km from Sarjapur Road and the ORR, about 50 km from Electronic City. Most people from South, East and South-East Bangalore are here inside an hour and a half.`,
+    a: `${location.addressLine}. Roughly 25 km from Hosur, 45 km from Whitefield and 58 km from HSR Layout. Most people from South, East and South-East Bangalore are here inside an hour and a half.`,
   },
 ];
 

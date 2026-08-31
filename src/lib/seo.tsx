@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { faqs } from "./content";
-import { contact, hours, location, site } from "./site";
+import { contact, family, hours, location, site } from "./site";
 
 export function pageMeta({
   title,
@@ -26,11 +26,13 @@ export function pageMeta({
       title: `${title} · ${site.name}`,
       description,
       locale: site.locale,
+      images: [{ url: site.ogImage, width: 1200, height: 630, alt: site.name }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} · ${site.name}`,
       description,
+      images: [site.ogImage],
     },
   };
 }
@@ -43,7 +45,26 @@ export function localBusinessSchema() {
     "@type": ["LocalBusiness", "TouristAttraction"],
     "@id": `${site.url}#business`,
     name: site.name,
-    alternateName: "Paws Pannai Pet Park & Pool",
+    alternateName: site.gbpName,
+    additionalType: "https://www.wikidata.org/wiki/Q1195942",
+    image: [new URL(site.ogImage, site.url).toString()],
+    logo: new URL(site.ogImage, site.url).toString(),
+    priceRange: "₹₹",
+    hasMap: location.mapsLink,
+    isAccessibleForFree: false,
+    publicAccess: true,
+    areaServed: [
+      "Hosur",
+      "Bengaluru",
+      "Electronic City",
+      "Sarjapur Road",
+      "Whitefield",
+      "HSR Layout",
+    ].map((n) => ({ "@type": "Place", name: n })),
+    parentOrganization: {
+      "@type": "Organization",
+      name: family.company,
+    },
     description: site.description,
     url: site.url,
     telephone: contact.phone,
@@ -51,16 +72,15 @@ export function localBusinessSchema() {
     currenciesAccepted: "INR",
     address: {
       "@type": "PostalAddress",
-      streetAddress: location.village,
-      addressLocality: "Hosur",
-      addressRegion: "Tamil Nadu",
+      streetAddress: location.streetAddress,
+      addressLocality: location.addressLocality,
+      addressRegion: location.addressRegion,
+      postalCode: location.postalCode,
       addressCountry: "IN",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: location.lat,
-      longitude: location.lng,
-    },
+    ...(location.lat !== null && location.lng !== null
+      ? { geo: { "@type": "GeoCoordinates", latitude: location.lat, longitude: location.lng } }
+      : {}),
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
@@ -83,7 +103,7 @@ export function localBusinessSchema() {
       { "@type": "LocationFeatureSpecification", name: "Cafe", value: true },
       { "@type": "LocationFeatureSpecification", name: "Parking", value: true },
     ],
-    sameAs: [contact.instagram],
+    sameAs: [contact.instagram, location.mapsLink],
   };
 }
 
@@ -92,6 +112,48 @@ export function faqSchema() {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}
+
+/** Article schema for Journal posts. */
+export function articleSchema(post: {
+  slug: string;
+  title: string;
+  description: string;
+  published: string;
+  image?: string;
+}) {
+  const url = new URL(`/journal/${post.slug}`, site.url).toString();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: post.title,
+    description: post.description,
+    datePublished: post.published,
+    dateModified: post.published,
+    mainEntityOfPage: url,
+    image: [new URL(post.image ?? site.ogImage, site.url).toString()],
+    author: { "@type": "Organization", name: site.name, url: site.url },
+    publisher: {
+      "@type": "Organization",
+      name: site.name,
+      logo: { "@type": "ImageObject", url: new URL(site.ogImage, site.url).toString() },
+    },
+    isPartOf: { "@id": `${site.url}#business` },
+  };
+}
+
+/** FAQPage built from an arbitrary list — used by the locality pages. */
+export function faqSchemaFrom(list: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: list.map((f) => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },

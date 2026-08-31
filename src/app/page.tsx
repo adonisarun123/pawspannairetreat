@@ -19,7 +19,7 @@ import { driveTimes, facts, family, hours, location } from "@/lib/site";
 export const metadata = pageMeta({
   title: "A dog park on a working farm near Hosur",
   description:
-    "One acre of farmland near Hosur where your dog runs off-leash — twelve upcycled tyre installations, a bone-shaped pool, and mango shade. Sessions by the hour, 45 km from Sarjapur Road.",
+    "One acre of farmland near Hosur where your dog runs off-leash — twelve upcycled tyre installations, a bone-shaped pool, and mango shade. Sessions by the hour, 45 km from Whitefield.",
   path: "/",
 });
 
@@ -59,6 +59,7 @@ export default function HomePage() {
             <Figure
               slot={media.entranceArch}
               priority
+              ratio="1 / 1"
               sizes="(min-width: 1024px) 42vw, 100vw"
               showCaption
             />
@@ -189,7 +190,7 @@ export default function HomePage() {
       <Section>
         <Container width="wide">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <Figure slot={media.tyreCafe} sizes="(min-width: 1024px) 50vw, 100vw" />
+            <Figure slot={media.tyreCafe} ratio="4 / 3" sizes="(min-width: 1024px) 50vw, 100vw" />
             <div>
               <Eyebrow className="text-canopy-700">For the whole family</Eyebrow>
               <Title>The dog is the point. Everyone else still has a good day.</Title>
@@ -233,22 +234,18 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <Figure slot={media.tyreHill} sizes="(min-width: 1024px) 25vw, 50vw" showCaption />
-            <Figure
-              slot={media.tyreJumpThrough}
-              sizes="(min-width: 1024px) 25vw, 50vw"
-              showCaption
-            />
-            <Figure
-              slot={media.fencedPlayZone}
-              sizes="(min-width: 1024px) 25vw, 50vw"
-              showCaption
-            />
-            <Figure
-              slot={media.boundarySignage}
-              sizes="(min-width: 1024px) 25vw, 50vw"
-              showCaption
-            />
+            {[media.tyreHill, media.tyreJumpThrough, media.fencedPlayZone, media.boundarySignage].map(
+              (slot) => (
+                <Figure
+                  key={slot.id}
+                  slot={slot}
+                  ratio="4 / 5"
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  showCaption
+                  className="[&_figcaption]:min-h-[2.75rem]"
+                />
+              ),
+            )}
           </div>
         </Container>
       </Section>
@@ -264,8 +261,8 @@ export default function HomePage() {
               <Eyebrow className="text-canopy-700">Getting here</Eyebrow>
               <Title>Closer than you think</Title>
               <Lede>
-                {location.addressLine}. About 45 km from Sarjapur Road and the ORR — an easy
-                morning from South, East and South-East Bangalore.
+                {location.addressLine}. About 45 km from Whitefield and 25 km from Hosur — an
+                easy morning from South, East and South-East Bangalore.
               </Lede>
               <div className="mt-8">
                 <CTA href="/plan-your-visit/getting-here" tone="canopy">
@@ -275,7 +272,7 @@ export default function HomePage() {
             </div>
 
             <ul className="grid gap-3 sm:grid-cols-2">
-              {driveTimes.map((d) => (
+              {driveTimes.slice(0, 4).map((d) => (
                 <li
                   key={d.from}
                   className="flex items-baseline justify-between gap-4 rounded-2xl border border-floor-900/10 bg-bone-50 px-5 py-4"
@@ -313,7 +310,12 @@ function PillarCard({
 }) {
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border border-floor-900/10 bg-bone-50">
-      <Figure slot={slot} rounded="rounded-none" sizes="(min-width: 1024px) 33vw, 100vw" />
+      <Figure
+        slot={slot}
+        rounded="rounded-none"
+        ratio="4 / 3"
+        sizes="(min-width: 1024px) 33vw, 100vw"
+      />
       <div className="flex flex-1 flex-col p-6">
         <p className="text-xs font-semibold tracking-[0.14em] text-canopy-700 uppercase">
           {kicker}

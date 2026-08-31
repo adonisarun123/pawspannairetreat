@@ -6,7 +6,6 @@ import {
   Container,
   Eyebrow,
   Lede,
-  Pending,
   Section,
   Title,
 } from "@/components/ui";
@@ -16,7 +15,7 @@ import { contact, driveTimes, hours, location, whatsappLink } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Getting Here",
   description:
-    "Directions to Paws Pannai Retreat in Seekanapalli village near Hosur — roughly 45 km from Sarjapur Road and the ORR, 50 km from Electronic City. Map, drive times and parking.",
+    "Directions to Paws Pannai Retreat in Seekanapalli village near Hosur — 25 km from Hosur, 45 km from Whitefield, 58 km from HSR Layout. Map, drive times and parking.",
   path: "/plan-your-visit/getting-here",
 });
 
@@ -30,7 +29,7 @@ export default function GettingHerePage() {
       <PageHero
         eyebrow="Plan Your Visit · Getting Here"
         title="Seekanapalli village, near Hosur"
-        lede={`About 45 km from Sarjapur Road and the ORR, and roughly 50 km from Electronic City. For most of South, East and South-East Bangalore that is a comfortable morning drive — and the last stretch is farm road, not highway.`}
+        lede={`About 25 km from Hosur, 45 km from Whitefield and 58 km from HSR Layout. For most of South, East and South-East Bangalore that is a comfortable morning drive — and the last stretch is farm road, not highway.`}
         crumbs={[
           { name: "Plan Your Visit", path: "/plan-your-visit" },
           { name: "Getting Here", path: "/plan-your-visit/getting-here" },
@@ -64,11 +63,7 @@ export default function GettingHerePage() {
               <Card>
                 <Eyebrow className="text-canopy-700">Address</Eyebrow>
                 <p className="font-display text-xl leading-snug font-semibold">
-                  {location.addressLine}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed opacity-70">
-                  Full postal address and PIN: <Pending>to be confirmed</Pending>. Until then, use
-                  the map pin — it is accurate to the gate.
+                  {location.fullAddress}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <CTA href={location.mapsLink} tone="canopy" external>
@@ -84,7 +79,7 @@ export default function GettingHerePage() {
                     <li key={d.from} className="flex items-baseline justify-between gap-4 py-3">
                       <span className="font-medium">{d.from}</span>
                       <span className="text-sm opacity-70">
-                        {d.detail.includes("TODO") ? <Pending>TBC</Pending> : d.detail}
+                        {d.detail}
                       </span>
                     </li>
                   ))}

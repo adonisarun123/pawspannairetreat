@@ -9,7 +9,7 @@ import { contact, driveTimes, hours, location, whatsappLink } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Plan Your Visit",
   description:
-    "Hours, vaccination requirements, park rules, drive times and directions for Paws Pannai Retreat — the dog park near Hosur, 45 km from Sarjapur Road.",
+    "Hours, vaccination requirements, park rules, drive times and directions for Paws Pannai Retreat — the dog park near Hosur, 45 km from Whitefield.",
   path: "/plan-your-visit",
 });
 

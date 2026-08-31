@@ -29,7 +29,7 @@ export function SiteFooter() {
                     rel="noopener noreferrer"
                     className="underline underline-offset-4 hover:text-mango-300"
                   >
-                    {location.addressLine}
+                    {location.fullAddress}
                   </a>
                 </dd>
               </div>
@@ -76,9 +76,10 @@ export function SiteFooter() {
                   <FooterLink href="/gallery">Gallery</FooterLink>
                 </li>
                 <li>
-                  <FooterLink href={family.cafe.url} external>
-                    Cafe Tamarind
-                  </FooterLink>
+                  <FooterLink href="/journal">The Journal</FooterLink>
+                </li>
+                <li>
+                  <FooterLink href="/dog-park-near">From your neighbourhood</FooterLink>
                 </li>
                 <li>
                   <FooterLink href="/contact">Contact</FooterLink>

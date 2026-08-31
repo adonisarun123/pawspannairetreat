@@ -1,4 +1,4 @@
-import { family } from "./site";
+import { contact, family } from "./site";
 
 export type NavChild = { label: string; href: string; note?: string };
 export type NavItem = { label: string; href: string; children?: NavChild[] };
@@ -58,6 +58,7 @@ export const primaryNav: NavItem[] = [
       { label: "FAQ", href: "/plan-your-visit/faq" },
       { label: "Park Rules", href: "/plan-your-visit/park-rules" },
       { label: "Getting Here", href: "/plan-your-visit/getting-here" },
+      { label: "From Your Neighbourhood", href: "/dog-park-near" },
     ],
   },
 ];
@@ -65,8 +66,8 @@ export const primaryNav: NavItem[] = [
 /** IA §03 — utility links live in the footer, deliberately not in the top nav. */
 export const footerNav: NavChild[] = [
   { label: "Gallery", href: "/gallery" },
-  { label: "Cafe Tamarind", href: family.cafe.url, note: "external" },
+  { label: "The Journal", href: "/journal" },
   { label: "Contact", href: "/contact" },
-  { label: "Instagram", href: "", note: "external" },
+  { label: "Instagram", href: contact.instagram, note: "external" },
   { label: "Policies", href: "/policies" },
 ];

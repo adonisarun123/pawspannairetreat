@@ -1,16 +1,20 @@
 /**
  * Paws Pannai Retreat — single source of truth for facts, contacts and links.
  *
- * Anything marked TODO is a placeholder that must be replaced before launch.
+ * Facts confirmed 31 Aug 2026. Surveyed lat/lng is the one item still open.
  * Nothing else in the codebase should hard-code a phone number, price or URL.
  */
 
 export const site = {
   name: "Paws Pannai Retreat",
   shortName: "Paws Pannai",
+  /** Exact Google Business Profile name. Keep these identical. */
+  gbpName: "Paws Pannai Retreat - Pets Park & Pool",
+  /** Social/OG share card, 1200x630. */
+  ogImage: "/og.jpg",
   tagline: "Pet Play & Pool",
   /** Used for canonical URLs, sitemap and JSON-LD. */
-  url: "https://pawspannai.com", // TODO: confirm live domain
+  url: "https://www.pawspannairetreat.com",
   locale: "en_IN",
   description:
     "A one-acre working farm near Hosur where your dog runs free — 12 upcycled tyre installations, a bone-shaped pool, mango and tamarind shade, and sessions booked by the hour.",
@@ -18,23 +22,34 @@ export const site = {
 
 export const contact = {
   /** International format, digits only — used to build wa.me links. */
-  whatsapp: "919999999999", // TODO: real WhatsApp business number
-  whatsappDisplay: "+91 99999 99999", // TODO
-  phone: "+919999999999", // TODO
-  phoneDisplay: "+91 99999 99999", // TODO
-  email: "hello@pawspannai.com", // TODO
-  instagram: "https://instagram.com/pawspannai", // TODO: confirm handle
+  whatsapp: "917795207779",
+  whatsappDisplay: "+91 77952 07779",
+  phone: "+917795207779",
+  phoneDisplay: "+91 77952 07779",
+  email: "sthairyastays@gmail.com",
+  instagram: "https://www.instagram.com/pawspannairetreat/",
 } as const;
 
 export const location = {
-  village: "Seekanapalli village",
+  village: "Seekanapalli Village",
   nearest: "near Hosur, Tamil Nadu",
-  addressLine: "Seekanapalli village, near Hosur, Tamil Nadu", // TODO: full postal address + PIN
-  /** Approximate — replace with surveyed coordinates before launch. */
-  lat: 12.7409, // TODO
-  lng: 77.8253, // TODO
-  mapsEmbedQuery: "Paws Pannai Retreat Seekanapalli Hosur", // TODO: replace with a Place ID embed
-  mapsLink: "https://maps.google.com/?q=Paws+Pannai+Retreat+Seekanapalli+Hosur", // TODO
+  /** Short form, for prose. */
+  addressLine: "Seekanapalli village, near Hosur, Tamil Nadu",
+  /** Full postal address, for the Getting Here card and the footer. */
+  fullAddress:
+    "Plot 79, SF3 (Divine Groves), Shoolagiri Road, Seekanapalli Village, Post Berigai, Hosur, Tamil Nadu 635105",
+  streetAddress: "Plot 79, SF3 (Divine Groves), Shoolagiri Road, Seekanapalli Village",
+  addressLocality: "Post Berigai, Hosur",
+  addressRegion: "Tamil Nadu",
+  postalCode: "635105",
+  /** Taken from the Google Business Profile pin (Plus Code QXGQ+2P). */
+  lat: 12.775113,
+  lng: 77.9892776,
+  /** Google Business Profile CID — the stable id for this listing. */
+  googleCid: "10278887574214274125",
+  mapsEmbedQuery:
+    "Paws Pannai Retreat, Plot 79 SF3 Divine Groves, Shoolagiri Road, Seekanapalli Village, Post Berigai, Hosur, Tamil Nadu 635105",
+  mapsLink: "https://maps.google.com/?cid=10278887574214274125",
 } as const;
 
 export const hours = {
@@ -53,19 +68,22 @@ export const family = {
     name: "Bevu Social Farmstay",
     abbr: "BSF",
     blurb: "The farmstay next door — same land, separate entrance, one address.",
-    url: "https://bevusocialfarmstay.com", // TODO: real URL — flagged in IA §09
-    bookingUrl: "https://bevusocialfarmstay.com/book", // TODO: real booking URL
+    address:
+      "Plot 59, SF3 (Divine Groves), Shoolagiri Road, Seekanapalli Village, Post Berigai, Hosur, Tamil Nadu 635105",
+    url: "https://bevusocialfarmstay.com/",
+    bookingUrl: "https://bevusocialfarmstay.com/",
   },
   ssek: {
     name: "SSEK",
     location: "Kanha",
     blurb: "The group's forest property in Kanha, Madhya Pradesh.",
-    url: "https://ssek.in", // TODO: real URL — flagged in IA §09
+    url: "https://www.surwahi.com",
   },
   cafe: {
     name: "Cafe Tamarind",
     blurb: "Sthairya's own in-house kitchen — not a third-party vendor.",
-    url: "#", // TODO: Cafe Tamarind page or external site
+    /** No page of its own yet — referenced in copy, never linked. */
+    url: null as string | null,
   },
 } as const;
 
@@ -81,13 +99,17 @@ export const facts = {
   wideFarmName: "Divine Groves",
 } as const;
 
-/** Drive times quoted on Home and Getting Here. Source: IA §01 / SF3 figures. */
+/**
+ * Distances to the gate. `confirmed: true` means measured and signed off;
+ * the other two are inherited estimates and should not be quoted in prose
+ * until they are checked.
+ */
 export const driveTimes = [
-  { from: "Electronic City", detail: "50 km" },
-  { from: "Sarjapur Road", detail: "30 km via Hosur Rd" },
-  { from: "HSR Layout", detail: "TODO km" },
-  { from: "Whitefield", detail: "TODO km" },
-  { from: "Hosur", detail: "TODO km" },
+  { from: "Hosur", detail: "25.2 km", confirmed: true },
+  { from: "Sarjapur Road", detail: "30 km via Hosur Rd", confirmed: false },
+  { from: "Whitefield", detail: "44.9 km", confirmed: true },
+  { from: "Electronic City", detail: "50 km", confirmed: false },
+  { from: "HSR Layout", detail: "58.3 km", confirmed: true },
 ] as const;
 
 export function whatsappLink(message: string): string {
