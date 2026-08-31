@@ -12,15 +12,16 @@ export const metadata = pageMeta({
 });
 
 export default function GalleryPage() {
-  const shots = galleryOrder.map((key) => media[key]);
-  const live = shots.filter((s) => s.src).length;
+  // Only real photographs. Pending slots stay in `media.ts` as a shot list —
+  // a gallery is the one page where an empty frame reads as a broken site.
+  const shots = galleryOrder.map((key) => media[key]).filter((s) => s.src);
 
   return (
     <>
       <PageHero
         eyebrow="Gallery"
         title="The park, photographed on the park"
-        lede={`No stock, no renders. ${live} of these are real shots taken on the farm; the rest are marked and waiting for the camera to catch up with the building.`}
+        lede="No stock and no renders — every photograph here was taken on the farm, on the ground your dog will run on. More go up as the building finishes."
         crumbs={[{ name: "Gallery", path: "/gallery" }]}
         actions={
           <>
@@ -34,7 +35,7 @@ export default function GalleryPage() {
 
       <Section tone="bone">
         <Container width="wide">
-          <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 [&>*]:mb-5 [&>*]:break-inside-avoid">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {shots.map((s) => (
               <Figure
                 key={s.id}

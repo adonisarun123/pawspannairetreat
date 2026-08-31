@@ -9,7 +9,7 @@ export function SiteFooter() {
   return (
     <footer className="bg-floor-900 text-bone-100">
       <Container width="wide">
-        <div className="grid gap-12 py-16 lg:grid-cols-[1.2fr_2fr]">
+        <div className="grid items-start gap-12 py-16 lg:grid-cols-[0.9fr_2.4fr] lg:gap-14">
           <div>
             <p className="font-display text-2xl font-semibold">{site.name}</p>
             <p className="mt-1 text-sm tracking-[0.16em] text-mango-300 uppercase">
@@ -22,14 +22,35 @@ export function SiteFooter() {
             <dl className="mt-8 space-y-3 text-sm">
               <div>
                 <dt className="opacity-55">Where</dt>
-                <dd className="mt-0.5">
+                <dd className="mt-1.5">
                   <a
                     href={location.mapsLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline underline-offset-4 hover:text-mango-300"
+                    className="group flex gap-3 rounded-xl border border-bone-50/15 bg-bone-50/5 p-3.5 transition-colors hover:border-mango-300/50 hover:bg-bone-50/10"
                   >
-                    {location.fullAddress}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-mango-300"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden
+                    >
+                      <path d="M20 10c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1116 0z" />
+                      <circle cx="12" cy="10" r="2.6" />
+                    </svg>
+                    <span>
+                      <span className="block leading-relaxed">{location.fullAddress}</span>
+                      <span className="mt-1.5 block text-xs opacity-60">
+                        Plus Code {location.plusCode}
+                      </span>
+                      <span className="mt-2 block text-xs font-semibold text-mango-300 group-hover:underline">
+                        Get directions ↗
+                      </span>
+                    </span>
                   </a>
                 </dd>
               </div>
@@ -65,7 +86,7 @@ export function SiteFooter() {
             </dl>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-3">
+          <div className="grid content-start gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-4">
             {primaryNav.map((item) => (
               <FooterColumn key={item.href} item={item} />
             ))}

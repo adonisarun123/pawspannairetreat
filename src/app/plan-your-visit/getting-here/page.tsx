@@ -65,6 +65,11 @@ export default function GettingHerePage() {
                 <p className="font-display text-xl leading-snug font-semibold">
                   {location.fullAddress}
                 </p>
+                <p className="mt-3 text-sm opacity-70">
+                  Plus Code <span className="font-medium">{location.plusCode}</span> — paste it into
+                  Google Maps if the postal address sends you the wrong way. On a village road it
+                  usually will.
+                </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <CTA href={location.mapsLink} tone="canopy" external>
                     Directions ↗

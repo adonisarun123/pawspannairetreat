@@ -54,6 +54,12 @@ export const location = {
   lng: 77.9892776,
   /** Google Business Profile CID — the stable id for this listing. */
   googleCid: "10278887574214274125",
+  /**
+   * Open Location Code. Rural postal addresses route badly; this is what
+   * actually gets a driver to the gate, so it is published everywhere the
+   * address is.
+   */
+  plusCode: "QXGQ+2P Seekanapalli, Tamil Nadu",
   mapsEmbedQuery:
     "Paws Pannai Retreat, Plot 79 SF3 Divine Groves, Shoolagiri Road, Seekanapalli Village, Post Berigai, Hosur, Tamil Nadu 635105",
   mapsLink: "https://maps.google.com/?cid=10278887574214274125",

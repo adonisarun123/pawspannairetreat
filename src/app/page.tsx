@@ -271,17 +271,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <ul className="grid gap-3">
-              {driveTimes.map((d) => (
-                <li
-                  key={d.from}
-                  className="flex items-baseline justify-between gap-4 rounded-2xl border border-floor-900/10 bg-bone-50 px-5 py-4"
-                >
-                  <span className="font-medium">{d.from}</span>
-                  <span className="text-sm opacity-70">{d.detail}</span>
-                </li>
-              ))}
-            </ul>
+            <DistancePanel />
           </div>
         </Container>
       </Section>
@@ -330,6 +320,68 @@ function PillarCard({
         </Link>
       </div>
     </article>
+  );
+}
+
+function DistancePanel() {
+  const furthest = Math.max(...driveTimes.map((d) => parseFloat(d.detail)));
+  return (
+    <div className="self-start rounded-2xl border border-floor-900/10 bg-bone-50 p-6 sm:p-8">
+      <p className="text-xs font-semibold tracking-[0.14em] text-canopy-700 uppercase">
+        Distance to the gate
+      </p>
+
+      <ul className="mt-7 space-y-6">
+        {driveTimes.map((d) => (
+          <li key={d.from}>
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="font-medium">{d.from}</span>
+              <span className="font-display text-xl font-semibold sm:text-2xl">{d.detail}</span>
+            </div>
+            <div className="mt-2.5 h-1 w-full overflow-hidden rounded-full bg-floor-900/8">
+              <div
+                className="h-full rounded-full bg-mango-400"
+                style={{ width: `${(parseFloat(d.detail) / furthest) * 100}%` }}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-floor-900/10 pt-6">
+        <div>
+          <p className="text-xs tracking-[0.14em] uppercase opacity-50">Plus Code</p>
+          <p className="mt-1 font-medium">{location.plusCode}</p>
+        </div>
+        <a
+          href={location.mapsLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-canopy-700 underline underline-offset-4"
+        >
+          <MapPin className="h-4 w-4" />
+          Open in Google Maps
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function MapPin({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M20 10c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1116 0z" />
+      <circle cx="12" cy="10" r="2.6" />
+    </svg>
   );
 }
 

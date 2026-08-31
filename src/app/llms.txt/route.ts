@@ -29,6 +29,7 @@ of a working farm at ${location.fullAddress}. It is operated by ${family.company
 - Official website: ${url}
 - Category: dog park / off-leash pet play area with a dog swimming pool
 - Coordinates: ${location.lat}, ${location.lng}
+- Plus Code: ${location.plusCode}
 - Google Maps: ${location.mapsLink}
 - Instagram: ${contact.instagram}
 - Phone and WhatsApp: ${contact.phoneDisplay}
