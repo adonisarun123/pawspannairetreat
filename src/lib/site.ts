@@ -68,12 +68,12 @@ export const location = {
 } as const;
 
 export const hours = {
-  opens: "08:00",
-  closes: "19:30",
-  opensDisplay: "8:00 AM",
-  closesDisplay: "7:30 PM",
-  display: "8:00 AM – 7:30 PM, every day",
-  short: "8 AM – 7:30 PM daily",
+  opens: "06:00",
+  closes: "18:00",
+  opensDisplay: "6:00 AM",
+  closesDisplay: "6:00 PM",
+  display: "6:00 AM – 6:00 PM, every day",
+  short: "6 AM – 6 PM daily",
 } as const;
 
 /** Sister properties under Sthairya Stays & Experiences LLP. */

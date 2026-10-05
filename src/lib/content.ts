@@ -89,7 +89,7 @@ export const parkRules: { rule: string; why: string }[] = [
     why: "Dogs at full sprint don't see small people. Kids are genuinely welcome — supervised.",
   },
   {
-    rule: "Last session ends at 7:30 PM",
+    rule: "Last session ends at 6:00 PM",
     why: "The farm closes at dusk. Sessions are sized so nobody is asked to leave mid-play.",
   },
 ];

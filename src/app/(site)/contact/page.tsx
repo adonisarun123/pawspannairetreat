@@ -8,7 +8,7 @@ import { contact, family, hours, location, whatsappLink } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Contact",
   description:
-    "Reach Paws Pannai Retreat near Hosur on WhatsApp, phone or email. Open 8:00 AM to 7:30 PM daily, in Seekanapalli village.",
+    "Reach Paws Pannai Retreat near Hosur on WhatsApp, phone or email. Open 6:00 AM to 6:00 PM daily, in Seekanapalli village.",
   path: "/contact",
 });
 

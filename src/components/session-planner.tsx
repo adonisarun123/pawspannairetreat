@@ -9,13 +9,11 @@ import {
   quote,
   rupees,
 } from "@/lib/pricing";
+import { CLOSE_MIN, OPEN_MIN } from "@/lib/booking-format";
 import { contact, hours as openHours, whatsappLink } from "@/lib/site";
 import { Button, Card, cx } from "./ui";
 
 /* Slot helpers -------------------------------------------------------- */
-
-const OPEN_MIN = 8 * 60; // 08:00
-const CLOSE_MIN = 19 * 60 + 30; // 19:30
 
 function label(minutes: number): string {
   const h24 = Math.floor(minutes / 60);

@@ -61,7 +61,7 @@ export default function ParkRulesPage() {
             </Card>
             <Card>
               <Eyebrow className="text-canopy-700">Timing</Eyebrow>
-              <h2 className="font-display text-xl font-semibold">Sessions end by 7:30 PM</h2>
+              <h2 className="font-display text-xl font-semibold">Sessions end by 6:00 PM</h2>
               <p className="mt-3 text-sm leading-relaxed opacity-75">
                 We&apos;re open {hours.display}. The farm has no floodlighting, deliberately — the
                 last session is sized so nobody is asked to leave in the middle of play.

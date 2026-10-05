@@ -2,8 +2,8 @@
 
 export type BookingStatus = "pending" | "accepted" | "rejected" | "cancelled";
 
-export const OPEN_MIN = 8 * 60; // 08:00
-export const CLOSE_MIN = 19 * 60 + 30; // 19:30
+export const OPEN_MIN = 6 * 60; // 06:00 — keep in step with `hours` in site.ts
+export const CLOSE_MIN = 18 * 60; // 18:00
 
 export function minutesLabel(minutes: number): string {
   const h24 = Math.floor(minutes / 60);

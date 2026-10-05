@@ -63,7 +63,7 @@ function slotFrom(form: FormData, hours: number): { startsAt: string; endsAt: st
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { error: "Pick a date." };
   if (!Number.isFinite(start)) return { error: "Pick a start time." };
   const end = start + hours * 60;
-  if (start < OPEN_MIN || end > CLOSE_MIN) return { error: "That slot runs outside opening hours (8:00 AM – 7:30 PM)." };
+  if (start < OPEN_MIN || end > CLOSE_MIN) return { error: "That slot runs outside opening hours (6:00 AM – 6:00 PM)." };
   const t = (m: number) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
   return { startsAt: `${date} ${t(start)}`, endsAt: `${date} ${t(end)}` };
 }
