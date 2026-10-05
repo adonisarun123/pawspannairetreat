@@ -1,8 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { MobileBookBar } from "@/components/mobile-book-bar";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import { JsonLd, localBusinessSchema } from "@/lib/seo";
 import { site } from "@/lib/site";
 // Self-hosted variable fonts — no runtime call to Google, no CLS on first paint.
 import "@fontsource-variable/inter";
@@ -49,13 +45,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-IN">
-      <body className="min-h-dvh antialiased">
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <MobileBookBar />
-        <SiteFooter />
-        <JsonLd data={localBusinessSchema()} />
-      </body>
+      <body className="min-h-dvh antialiased">{children}</body>
     </html>
   );
 }

@@ -38,6 +38,12 @@ function todayISO(): string {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
 
+const REF_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+function newRef(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(5));
+  return "PP-" + Array.from(bytes, (b) => REF_ALPHABET[b % REF_ALPHABET.length]).join("");
+}
+
 /* Component ----------------------------------------------------------- */
 
 export function SessionPlanner({ compact = false }: { compact?: boolean }) {
@@ -49,6 +55,9 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
+  const [ref, setRef] = useState("");
+  const [formError, setFormError] = useState("");
 
   const starts = useMemo(() => startOptions(duration), [duration]);
   const q = useMemo(() => quote({ dogs, hours: duration, pool }), [dogs, duration, pool]);
@@ -56,8 +65,9 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
   const startLabel = typeof start === "number" ? label(start) : "any time you have free";
   const endLabel = typeof start === "number" ? label(start + duration * 60) : "";
 
-  const message = [
+  const buildMessage = (bookingRef: string) => [
     "Hi Paws Pannai — I'd like to book a session.",
+    bookingRef ? `Booking ref: ${bookingRef}` : "",
     "",
     `Dogs: ${dogs}`,
     `Length: ${duration} hour${duration > 1 ? "s" : ""}`,
@@ -70,12 +80,54 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
     phone ? `Phone: ${phone}` : "",
     notes ? `Notes: ${notes}` : "",
   ]
-    .filter(Boolean)
+    .filter((line, i) => i === 2 || Boolean(line))
     .join("\n");
 
-  const mailto = `mailto:${contact.email}?subject=${encodeURIComponent(
-    "Session booking request — Paws Pannai",
-  )}&body=${encodeURIComponent(message)}`;
+  /**
+   * Saves the request for the admin panel, then hands off to WhatsApp/email.
+   * The save is fire-and-forget (keepalive) so the hand-off is never blocked
+   * — and never opened late enough for a popup blocker to catch it.
+   */
+  function send(channel: "whatsapp" | "email") {
+    if (!name.trim() || phone.replace(/\D/g, "").length < 10) {
+      setFormError("Add your name and a 10-digit phone number so we can confirm your slot.");
+      document.getElementById(name.trim() ? "sp-phone" : "sp-name")?.focus();
+      return;
+    }
+    setFormError("");
+    const bookingRef = ref || newRef();
+    setRef(bookingRef);
+    try {
+      void fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          ref: bookingRef,
+          name,
+          phone,
+          dogs,
+          hours: duration,
+          pool,
+          date: date || null,
+          start: typeof start === "number" ? start : null,
+          notes,
+          website,
+        }),
+      }).catch(() => {});
+    } catch {
+      /* the WhatsApp message still carries everything */
+    }
+    const text = buildMessage(bookingRef);
+    if (channel === "whatsapp") {
+      window.open(whatsappLink(text), "_blank", "noopener,noreferrer");
+    } else {
+      window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(
+        `Session booking request ${bookingRef} — Paws Pannai`,
+      )}&body=${encodeURIComponent(text)}`;
+    }
+  }
+
 
   const fieldCls =
     "w-full rounded-xl border border-floor-900/15 bg-bone-50 px-3.5 py-2.5 text-sm text-floor-900 outline-none transition-colors focus:border-canopy-600";
@@ -182,7 +234,7 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
             </div>
             <div>
               <label className={labelCls} htmlFor="sp-name">
-                Your name
+                Your name *
               </label>
               <input
                 id="sp-name"
@@ -194,7 +246,7 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
             </div>
             <div>
               <label className={labelCls} htmlFor="sp-phone">
-                Phone
+                Phone (WhatsApp) *
               </label>
               <input
                 id="sp-phone"
@@ -219,6 +271,12 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
               placeholder="Breed and age, first visit, nervous around other dogs, bringing kids…"
               className={cx(fieldCls, "mt-2 resize-y")}
             />
+          </div>
+          <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+            <label>
+              Website
+              <input tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+            </label>
           </div>
         </div>
 
@@ -255,21 +313,31 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
             </p>
 
             <div className="mt-6 space-y-3">
-              <a
-                href={whatsappLink(message)}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => send("whatsapp")}
                 className="flex w-full items-center justify-center gap-2 rounded-full bg-mango-400 px-6 py-3 text-sm font-semibold text-floor-900 transition-colors hover:bg-mango-300"
               >
                 <WhatsAppGlyph className="h-4 w-4" />
                 Send this on WhatsApp
-              </a>
-              <a
-                href={mailto}
+              </button>
+              <button
+                type="button"
+                onClick={() => send("email")}
                 className="flex w-full items-center justify-center rounded-full border border-bone-50/35 px-6 py-3 text-sm font-semibold transition-colors hover:bg-bone-50/10"
               >
                 Email it instead
-              </a>
+              </button>
+              {formError ? (
+                <p role="alert" className="rounded-xl bg-bone-50 px-3.5 py-2.5 text-xs text-red-800">
+                  {formError}
+                </p>
+              ) : null}
+              {ref && !formError ? (
+                <p className="text-xs opacity-80">
+                  Request {ref} sent — we&apos;ll confirm on WhatsApp.
+                </p>
+              ) : null}
             </div>
 
             <p className="mt-4 text-xs leading-relaxed opacity-70">

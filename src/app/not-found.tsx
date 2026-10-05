@@ -1,7 +1,12 @@
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 import { CTA, Container, Section, Title } from "@/components/ui";
 
 export default function NotFound() {
   return (
+    <>
+    <SiteHeader />
+    <main id="main">
     <Section tone="paper" size="loose">
       <Container width="narrow">
         <div className="text-center">
@@ -24,5 +29,8 @@ export default function NotFound() {
         </div>
       </Container>
     </Section>
+    </main>
+    <SiteFooter />
+    </>
   );
 }
