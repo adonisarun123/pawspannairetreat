@@ -3,7 +3,7 @@ import { PageHero } from "@/components/page-hero";
 import { CTA, Card, Container, Eyebrow, Lede, Section, Title } from "@/components/ui";
 import { WhatsAppGlyph } from "@/components/session-planner";
 import { faqs, parkRules } from "@/lib/content";
-import { JsonLd, breadcrumbSchema, faqSchema, pageMeta } from "@/lib/seo";
+import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { contact, driveTimes, hours, location, whatsappLink } from "@/lib/site";
 
 export const metadata = pageMeta({
@@ -187,7 +187,6 @@ export default function PlanYourVisitPage() {
         </Container>
       </Section>
 
-      <JsonLd data={faqSchema()} />
       <JsonLd
         data={breadcrumbSchema([
           { name: "Home", path: "/" },

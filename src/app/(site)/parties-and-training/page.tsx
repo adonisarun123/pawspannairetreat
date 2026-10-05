@@ -1,7 +1,7 @@
 import { EnquiryForm } from "@/components/enquiry-form";
 import { PageHero } from "@/components/page-hero";
 import { CTA, Card, Container, Eyebrow, Lede, Section, Title } from "@/components/ui";
-import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
+import { JsonLd, breadcrumbSchema, extraServicesSchema, pageMeta } from "@/lib/seo";
 import { facts } from "@/lib/site";
 
 export const metadata = pageMeta({
@@ -191,6 +191,7 @@ export default function PartiesAndTrainingPage() {
           { name: "Parties & Training", path: "/parties-and-training" },
         ])}
       />
+      <JsonLd data={extraServicesSchema()} />
     </>
   );
 }

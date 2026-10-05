@@ -148,7 +148,7 @@ export default function ContactPage() {
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Contact", path: "/contact" },
-        ])}
+        ], { type: "ContactPage" })}
       />
     </>
   );

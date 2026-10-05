@@ -2,7 +2,7 @@ import { Figure } from "@/components/figure";
 import { PageHero } from "@/components/page-hero";
 import { CTA, Container, Section } from "@/components/ui";
 import { galleryOrder, media } from "@/lib/media";
-import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
+import { JsonLd, breadcrumbSchema, imageGallerySchema, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Gallery",
@@ -52,8 +52,9 @@ export default function GalleryPage() {
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Gallery", path: "/gallery" },
-        ])}
+        ], { type: "CollectionPage" })}
       />
+      <JsonLd data={imageGallerySchema(shots)} />
     </>
   );
 }

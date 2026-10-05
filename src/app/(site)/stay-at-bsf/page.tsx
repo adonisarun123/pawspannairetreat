@@ -12,7 +12,7 @@ import {
 } from "@/components/ui";
 import { media } from "@/lib/media";
 import { SHARED_RATE, rupees } from "@/lib/pricing";
-import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
+import { JsonLd, breadcrumbSchema, bsfSchema, pageMeta } from "@/lib/seo";
 import { family, hours } from "@/lib/site";
 
 export const metadata = pageMeta({
@@ -178,6 +178,7 @@ export default function StayAtBsfPage() {
           { name: `Stay at ${family.bsf.abbr}`, path: "/stay-at-bsf" },
         ])}
       />
+      <JsonLd data={bsfSchema()} />
     </>
   );
 }

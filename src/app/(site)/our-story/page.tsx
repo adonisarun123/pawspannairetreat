@@ -213,7 +213,7 @@ export default function OurStoryPage() {
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "Our Story", path: "/our-story" },
-        ])}
+        ], { type: "AboutPage" })}
       />
     </>
   );

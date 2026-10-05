@@ -4,7 +4,7 @@ import { PageHero } from "@/components/page-hero";
 import { Container, Section } from "@/components/ui";
 import { postsByDate } from "@/lib/journal";
 import { media } from "@/lib/media";
-import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
+import { JsonLd, blogSchema, breadcrumbSchema, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "The Journal",
@@ -68,8 +68,9 @@ export default function JournalIndex() {
         data={breadcrumbSchema([
           { name: "Home", path: "/" },
           { name: "The Journal", path: "/journal" },
-        ])}
+        ], { type: "CollectionPage" })}
       />
+      <JsonLd data={blogSchema(postsByDate)} />
     </>
   );
 }

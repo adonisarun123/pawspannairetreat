@@ -13,7 +13,7 @@ import {
 } from "@/components/ui";
 import { media } from "@/lib/media";
 import { rupees, PARK_CAPACITY, PRIVATE_MIN_DOGS, PRIVATE_RATE, SHARED_RATE } from "@/lib/pricing";
-import { JsonLd, offerSchema, pageMeta } from "@/lib/seo";
+import { JsonLd, breadcrumbSchema, offerSchema, pageMeta } from "@/lib/seo";
 import { driveTimes, facts, family, hours, location } from "@/lib/site";
 
 export const metadata = pageMeta({
@@ -273,6 +273,7 @@ export default function HomePage() {
       </Section>
 
       <JsonLd data={offerSchema()} />
+      <JsonLd data={breadcrumbSchema([{ name: "Home", path: "/" }])} />
     </>
   );
 }
