@@ -33,6 +33,8 @@ export const contact = {
   whatsappDisplay: "+91 77952 07779",
   phone: "+917795207779",
   phoneDisplay: "+91 77952 07779",
+  /** Launch-invite RSVPs only (/invite). Everything else uses `whatsapp`. */
+  rsvpWhatsapp: "919717334639",
   email: "sthairyastays@gmail.com",
   instagram: "https://www.instagram.com/pawspannairetreat/",
 } as const;
@@ -122,6 +124,14 @@ export const driveTimes = [
   { from: "HSR Layout", detail: "58.3 km" },
 ] as const;
 
-export function whatsappLink(message: string): string {
-  return `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(message)}`;
+export function whatsappLink(message: string, number: string = contact.whatsapp): string {
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
+
+/** Invite-only launch event (/invite). */
+export const launch = {
+  dateDisplay: "Saturday, 10 October 2026",
+  timeDisplay: "3:00 PM – 6:00 PM",
+  /** Event start, IST — drives the countdown. */
+  startsAt: "2026-10-10T15:00:00+05:30",
+} as const;
