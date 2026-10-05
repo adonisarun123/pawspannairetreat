@@ -75,7 +75,7 @@ export function acceptMessage(b: MessageBooking, mapsLink: string): string {
     `Booking: ${b.ref}`,
     `When: ${slotLabel(b.starts_at, b.ends_at)}`,
     `Dogs: ${b.dogs} · ${b.hours} hr${b.hours > 1 ? "s" : ""}${b.pool ? " · pool added" : ""}`,
-    `Total: ₹${b.quoted_total.toLocaleString("en-IN")} (payable at the park)`,
+    `Total: ₹${b.quoted_total.toLocaleString("en-IN")}`,
     "",
     `Directions: ${mapsLink}`,
     "See you and your pack soon!",
