@@ -4,6 +4,7 @@ import { addDays, dateLabel, todayIST } from "@/lib/booking-format";
 import { rupees } from "@/lib/pricing";
 import { can, panelUser } from "@/lib/server/auth";
 import { dashboardStats, listBookings } from "@/lib/server/bookings";
+import { rsvpTotals } from "@/lib/server/rsvps";
 
 export const metadata = { title: "Dashboard" };
 
@@ -14,10 +15,11 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const weekEnd = addDays(today, 6);
   const money = can(user, "revenue.view");
 
-  const [stats, pending, upcoming] = await Promise.all([
+  const [stats, pending, upcoming, rsvp] = await Promise.all([
     dashboardStats(today, weekEnd, `${today.slice(0, 7)}-01`),
     listBookings({ status: "pending", limit: 8 }),
     listBookings({ status: "accepted", from: today, to: weekEnd, limit: 20 }),
+    rsvpTotals(),
   ]);
 
   const tiles = [
@@ -55,7 +57,27 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         ))}
       </div>
 
-      <div className="mt-8 grid gap-6 xl:grid-cols-2">
+      <Panel
+        className="mt-6"
+        title="Launch RSVPs · 10 Oct"
+        action={<LinkButton href="/admin/rsvps" tone="outline">See all</LinkButton>}
+      >
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            { v: rsvp.parties, l: "RSVPs" },
+            { v: rsvp.people, l: "People coming" },
+            { v: rsvp.dogs, l: "Dogs coming" },
+            { v: rsvp.unreviewed, l: "Not yet reviewed" },
+          ].map((t) => (
+            <div key={t.l} className="border-l-2 border-mango-400 pl-3">
+              <div className="font-display text-2xl font-semibold">{t.v}</div>
+              <div className="text-xs opacity-70">{t.l}</div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <div className="mt-6 grid gap-6 xl:grid-cols-2">
         <Panel title="Needs a decision" action={<LinkButton href="/admin/bookings?status=pending" tone="outline">All pending</LinkButton>}>
           <BookingList bookings={pending} showMoney={money} />
         </Panel>

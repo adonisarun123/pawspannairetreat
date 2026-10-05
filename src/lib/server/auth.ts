@@ -26,6 +26,7 @@ const PERMISSIONS = {
   "bookings.edit": ["admin", "manager"],
   "bookings.delete": ["admin"],
   "blocks.manage": ["admin", "manager"],
+  "rsvps.manage": ["admin", "manager"],
   "users.manage": ["admin"],
   "revenue.view": ["admin"],
 } as const satisfies Record<string, readonly Role[]>;

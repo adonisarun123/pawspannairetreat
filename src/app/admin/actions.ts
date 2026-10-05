@@ -276,3 +276,19 @@ export async function resetUserPassword(_: FormState, form: FormData): Promise<F
   await sql`UPDATE users SET password_hash = ${hash}, must_change_password = true WHERE id = ${id}`;
   return { ok: "Password reset. Share it with them privately." };
 }
+
+/* ---------------------------------------------------------------- rsvps */
+
+export async function setRsvpStatus(form: FormData) {
+  await assertPermission("rsvps.manage");
+  const status = str(form, "status");
+  if (!["new", "confirmed", "declined"].includes(status)) throw new Error("Bad status");
+  await sql`UPDATE rsvps SET status = ${status}, updated_at = now() WHERE id = ${int(form, "id")}`;
+  revalidatePath("/admin", "layout");
+}
+
+export async function deleteRsvp(form: FormData) {
+  await assertPermission("users.manage");
+  await sql`DELETE FROM rsvps WHERE id = ${int(form, "id")}`;
+  revalidatePath("/admin", "layout");
+}

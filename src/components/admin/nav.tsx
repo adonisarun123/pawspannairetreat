@@ -4,12 +4,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cx } from "@/components/ui";
 
-export function AdminNav({ pending, showUsers }: { pending: number; showUsers: boolean }) {
+export function AdminNav({
+  pending,
+  newRsvps,
+  showUsers,
+}: {
+  pending: number;
+  newRsvps: number;
+  showUsers: boolean;
+}) {
   const path = usePathname();
   const items = [
     { href: "/admin", label: "Dashboard", exact: true },
     { href: "/admin/bookings", label: "Bookings", badge: pending },
     { href: "/admin/calendar", label: "Calendar" },
+    { href: "/admin/rsvps", label: "Launch RSVPs", badge: newRsvps },
     { href: "/admin/blocks", label: "Blocked times" },
     ...(showUsers ? [{ href: "/admin/users", label: "Team" }] : []),
     { href: "/admin/account", label: "My account" },

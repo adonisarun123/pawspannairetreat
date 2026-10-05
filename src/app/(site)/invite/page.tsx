@@ -1,10 +1,10 @@
 import { Figure } from "@/components/figure";
 import { LaunchCountdown } from "@/components/launch-countdown";
-import { WhatsAppGlyph } from "@/components/session-planner";
+import { RsvpForm } from "@/components/rsvp-form";
 import { Card, Container, Eyebrow, Lede, Section, Title } from "@/components/ui";
 import { media } from "@/lib/media";
 import { pageMeta } from "@/lib/seo";
-import { contact, launch, location, whatsappLink } from "@/lib/site";
+import { contact, launch, location } from "@/lib/site";
 
 /**
  * Invite-only launch page. Shared directly with invitees — kept out of search
@@ -17,11 +17,6 @@ const base = pageMeta({
   noIndex: true,
 });
 export const metadata = { ...base, robots: { index: false, follow: false } };
-
-const rsvpLink = whatsappLink(
-  "Hi! I'd like to RSVP for the Paws Pannai launch on 10 October 2026.\n\nMy name:\nNumber of people:\nNumber of dogs:\nDog's name(s):",
-  contact.rsvpWhatsapp,
-);
 
 const details = [
   { label: "Date", value: launch.dateDisplay },
@@ -52,13 +47,10 @@ const highlights = [
 function RsvpButton({ className = "" }: { className?: string }) {
   return (
     <a
-      href={rsvpLink}
-      target="_blank"
-      rel="noopener noreferrer"
+      href="#rsvp"
       className={`inline-flex items-center gap-2 rounded-full bg-mango-400 px-8 py-4 text-base font-semibold text-floor-900 shadow-sm transition-colors hover:bg-mango-300 ${className}`}
     >
-      <WhatsAppGlyph className="h-5 w-5" />
-      RSVP on WhatsApp
+      RSVP now ↓
     </a>
   );
 }
@@ -172,14 +164,18 @@ export default function InvitePage() {
       </Section>
 
       {/* --------------------------------------------------------- closing */}
-      <Section tone="canopy" size="tight">
-        <Container width="narrow" className="text-center">
-          <Title size="md">Save your spot</Title>
-          <p className="mx-auto mt-4 max-w-xl opacity-85">
-            Tell us who&apos;s coming — you, your family and your dogs — so we can get the food and
-            the park ready.
-          </p>
-          <RsvpButton className="mt-8" />
+      <Section tone="canopy" size="tight" id="rsvp" className="scroll-mt-24">
+        <Container width="narrow">
+          <div className="text-center">
+            <Title size="md">Save your spot</Title>
+            <p className="mx-auto mt-4 max-w-xl opacity-85">
+              Tell us who&apos;s coming — you, your family and your dogs — so we can get the food and
+              the park ready.
+            </p>
+          </div>
+          <div className="relative mt-8">
+            <RsvpForm whatsappNumber={contact.rsvpWhatsapp} eventLabel="10 October 2026" />
+          </div>
         </Container>
       </Section>
     </>
