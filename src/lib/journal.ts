@@ -139,7 +139,7 @@ export const posts: Post[] = [
       },
       {
         kind: "p",
-        text: "It is a paid add-on at ₹250 per dog per hour on top of the session rate, and it is deliberately not bundled — plenty of dogs come here and never go near the water, and there is no reason those visits should subsidise the ones that do.",
+        text: "It is included with every session — shared or private — so there is no extra line to decide on at the gate. Dogs swim 15 minutes at a time, then come out for a break before going back in; tired dogs and deep water do not mix.",
       },
       { kind: "h2", text: "Whatever you choose, these hold" },
       {
@@ -154,7 +154,7 @@ export const posts: Post[] = [
       },
       {
         kind: "note",
-        text: "If your dog has never been in water, book a session with the pool add-on and plan to spend the first twenty minutes doing nothing but standing in the shallow end. That is not a wasted session. That is the session.",
+        text: "If your dog has never been in water, book a session and plan to spend the first fifteen-minute turn doing nothing but standing in the shallow end. That is not a wasted session. That is the session.",
       },
     ],
   },
@@ -211,7 +211,7 @@ export const posts: Post[] = [
       { kind: "h2", text: "One thing worth telling us in advance" },
       {
         kind: "p",
-        text: "If your dog is reactive, or has bitten before, say so when you book. We do not turn dogs away by breed and we do not turn away reactive dogs. There is a separate netted zone that exists for exactly this, and it works far better as a plan than as a rescue. Every slot here is booked by one party — we never put unfamiliar dogs together — so the honest version of your dog is the only version we need to plan around.",
+        text: "If your dog is reactive, or has bitten before, say so when you book. We do not turn dogs away by breed and we do not turn away reactive dogs. There is a separate netted zone that exists for exactly this, and it works far better as a plan than as a rescue. If your dog is uneasy around strange dogs, book the park privately so no other dogs share your slot — the honest version of your dog is the only version we need to plan around.",
       },
       {
         kind: "note",
@@ -262,7 +262,7 @@ export const posts: Post[] = [
       { kind: "h2", text: "When the answer is no, for now" },
       {
         kind: "p",
-        text: "A dog that is reactive to other dogs is not disqualified here, because every slot is booked by one party and we never mix unfamiliar dogs. That is a genuinely different situation from a public park, and it is why some people drive a long way to get here.",
+        text: "A dog that is reactive to other dogs is not disqualified here. Book the park privately and no other dogs share your slot — a genuinely different situation from a public park, and the reason some people drive a long way to get here.",
       },
       {
         kind: "p",

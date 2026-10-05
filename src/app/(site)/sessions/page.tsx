@@ -12,10 +12,15 @@ import {
   Title,
 } from "@/components/ui";
 import {
-  BASE_RATE,
-  DISCOUNT_RATE,
+  ADULT_RATE,
+  CHILD_RATE,
   MAX_HOURS,
-  POOL_RATE,
+  PARK_CAPACITY,
+  POOL_SWIM_MINUTES,
+  PRIVATE_MIN_DOGS,
+  PRIVATE_RATE,
+  SHARED_RATE,
+  quote,
   rupees,
   tiers,
 } from "@/lib/pricing";
@@ -25,9 +30,20 @@ import { family, hours } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Sessions & Pricing",
   description:
-    "Dog park sessions near Hosur from ₹1,000 per dog, dropping to ₹750 per dog per hour at two hours or two dogs. Pool add-on ₹250. Plan your slot and send it on WhatsApp.",
+    "Introductory pricing: shared dog park near Hosur at ₹500 per dog per hour, or the whole park privately at ₹1,000 per dog per hour (min. 4 dogs). Pool included. One person per dog free.",
   path: "/sessions",
 });
+
+const examples = [
+  { label: "Shared · 1 dog · 1 hour · 1 person", q: quote({ mode: "shared", dogs: 1, hours: 1, adults: 1, kids: 0, under5: 0 }) },
+  { label: "Shared · 1 dog · 2 hours · 2 adults", q: quote({ mode: "shared", dogs: 1, hours: 2, adults: 2, kids: 0, under5: 0 }) },
+  { label: "Shared · 2 dogs · 2 hours · 2 adults + a 7-year-old", q: quote({ mode: "shared", dogs: 2, hours: 2, adults: 2, kids: 1, under5: 0 }) },
+  { label: "Private · 4 dogs · 2 hours · 4 adults", q: quote({ mode: "private", dogs: 4, hours: 2, adults: 4, kids: 0, under5: 0 }) },
+].map((e) => ({
+  ...e,
+  sub: (q: ReturnType<typeof quote>) =>
+    `${rupees(q.dogTotal)} dogs${q.peopleTotal ? ` + ${rupees(q.peopleTotal)} guests` : " · guests free"}`,
+}));
 
 export default function SessionsPage() {
   return (
@@ -35,7 +51,7 @@ export default function SessionsPage() {
       <PageHero
         eyebrow="Sessions & Pricing"
         title="Booked by the hour. Priced by the dog. Published in full."
-        lede={`Two tiers, one discounted rate, and no number hidden behind an enquiry form. Sessions run inside our opening hours of ${hours.display} — there is no late-evening slot, so nothing here will offer you one.`}
+        lede={`Introductory pricing: share the park from ${rupees(SHARED_RATE)} per dog per hour, or take the whole park privately. The pool is included and one person per dog comes free. Sessions run inside our opening hours of ${hours.display}.`}
         crumbs={[{ name: "Sessions & Pricing", path: "/sessions" }]}
         actions={
           <>
@@ -57,53 +73,62 @@ export default function SessionsPage() {
       {/* --------------------------------------------------------- how it works */}
       <Section>
         <Container width="wide">
-          <Eyebrow className="text-canopy-700">How sessions work</Eyebrow>
-          <Title>Two ways in. Same discounted rate at the end of both.</Title>
+          <Eyebrow className="text-canopy-700">How sessions work · introductory pricing</Eyebrow>
+          <Title>Share the park, or have it to yourselves.</Title>
           <Lede>
-            Exclusive rewards staying longer. Group rewards bringing more of your own dogs. Either
-            trigger drops the whole slot to {rupees(DISCOUNT_RATE)} per dog per hour.
+            Every session includes the pool. The difference is who else is in the park with you.
           </Lede>
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <Card id="exclusive" className="scroll-mt-28">
-              <Eyebrow className="text-canopy-700">Exclusive / Private</Eyebrow>
-              <h3 className="font-display text-2xl font-semibold">The place to yourselves</h3>
+            <Card id="shared" className="scroll-mt-28">
+              <Eyebrow className="text-canopy-700">Shared Park</Eyebrow>
+              <h3 className="font-display text-2xl font-semibold">Play alongside other dogs</h3>
               <p className="mt-4 leading-relaxed opacity-80">
-                One dog, or your own crew, in a slot nobody else shares. The trigger here is time:
-                book two hours or more and the entire slot re-prices at the lower rate — not just
-                the second hour.
-              </p>
-              <div className="mt-6 flex flex-wrap items-baseline gap-x-3">
-                <span className="font-display text-3xl font-semibold">{rupees(BASE_RATE)}</span>
-                <span className="opacity-70">first hour, per dog</span>
-              </div>
-              <div className="mt-1 flex flex-wrap items-baseline gap-x-3">
-                <span className="font-display text-3xl font-semibold text-canopy-700">
-                  {rupees(DISCOUNT_RATE)}
-                </span>
-                <span className="opacity-70">per dog per hour, from 2 hours</span>
-              </div>
-            </Card>
-
-            <Card id="group" className="scroll-mt-28">
-              <Eyebrow className="text-pool-500">Group Session</Eyebrow>
-              <h3 className="font-display text-2xl font-semibold">Bring your own crew</h3>
-              <p className="mt-4 leading-relaxed opacity-80">
-                Two or more dogs who already know each other, booked together by one party. The
-                trigger here is headcount — the lower rate applies from the first hour.
+                Your dogs share the park with other families&apos; dogs — never more than{" "}
+                {PARK_CAPACITY} dogs inside at once. You stay with your dog the whole time.
               </p>
               <div className="mt-6 flex flex-wrap items-baseline gap-x-3">
                 <span className="font-display text-3xl font-semibold text-canopy-700">
-                  {rupees(DISCOUNT_RATE)}
+                  {rupees(SHARED_RATE)}
                 </span>
-                <span className="opacity-70">per dog per hour, from hour one</span>
+                <span className="opacity-70">per dog per hour</span>
               </div>
               <p className="mt-6 rounded-xl bg-canopy-600/8 px-4 py-3 text-sm leading-relaxed text-canopy-700">
-                We do not mix unfamiliar dogs. A group slot is your dogs, or your friends&apos; dogs
-                that yours already know — never strangers put together by us.
+                Shared sessions are for friendly, vaccinated dogs. A dog showing aggression is asked
+                to take a break or leave the shared park. Reactive or nervous dogs do better with a
+                private booking.
+              </p>
+            </Card>
+
+            <Card id="private" className="scroll-mt-28">
+              <Eyebrow className="text-pool-500">Private Park</Eyebrow>
+              <h3 className="font-display text-2xl font-semibold">The whole park to your group</h3>
+              <p className="mt-4 leading-relaxed opacity-80">
+                No other dogs for your slot — the park, the tyre trail and the pool are yours. Ideal
+                for a crew of friends&apos; dogs, or a dog who needs space.
+              </p>
+              <div className="mt-6 flex flex-wrap items-baseline gap-x-3">
+                <span className="font-display text-3xl font-semibold text-canopy-700">
+                  {rupees(PRIVATE_RATE)}
+                </span>
+                <span className="opacity-70">per dog per hour · minimum {PRIVATE_MIN_DOGS} dogs</span>
+              </div>
+              <p className="mt-6 text-sm leading-relaxed opacity-70">
+                Charged for at least {PRIVATE_MIN_DOGS} dogs, so a private hour starts at{" "}
+                {rupees(PRIVATE_RATE * PRIVATE_MIN_DOGS)}.
               </p>
             </Card>
           </div>
+
+          <Card id="people" className="mt-6 scroll-mt-28">
+            <Eyebrow className="text-tamarind-600">People</Eyebrow>
+            <h3 className="font-display text-2xl font-semibold">One person per dog comes free</h3>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+              <Note title="Free" body="Children under 5 — always." />
+              <Note title={`${rupees(CHILD_RATE)}/hr`} body="Children 5–12, beyond the free place." />
+              <Note title={`${rupees(ADULT_RATE)}/hr`} body="Anyone 12 and over, beyond the free place." />
+            </div>
+          </Card>
         </Container>
       </Section>
 
@@ -154,9 +179,9 @@ export default function SessionsPage() {
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <Note title={`${MAX_HOURS} hours`} body="The longest continuous block one crew can book. Take a break and book a fresh block if you want the whole day." />
-            <Note title={`+${rupees(POOL_RATE)}/dog/hr`} body="The pool add-on, on either tier. Priced as the premium it is." />
-            <Note title="No stranger mixing" body="Every slot belongs to one party. There's no on-site handler yet, and we won't take that risk with your dog." />
+            <Note title={`${PARK_CAPACITY} dogs max`} body="Never more than ten dogs inside the park at once, shared or private." />
+            <Note title={`${POOL_SWIM_MINUTES}-minute swims`} body="Dogs come out of the pool after 15 minutes and go back in after a break." />
+            <Note title={`${MAX_HOURS} hours`} body="The longest continuous block one booking can cover. Book a fresh block after a break for the whole day." />
           </div>
         </Container>
       </Section>
@@ -166,25 +191,24 @@ export default function SessionsPage() {
         <Container width="wide">
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             <div>
-              <Eyebrow className="text-mango-300">Pool Add-On</Eyebrow>
-              <Title>+{rupees(POOL_RATE)} per dog, per hour</Title>
+              <Eyebrow className="text-mango-300">The Bone Pool</Eyebrow>
+              <Title>Included with every session</Title>
               <Lede className="opacity-90">
-                Add the bone-shaped pool to any session, on either tier. It is not bundled into
-                entry and it is not a surprise at the gate — it&apos;s a separate line, priced
-                openly, because it&apos;s the best thing on the farm.
+                The bone-shaped pool comes with every booking, shared or private. Dogs swim{" "}
+                {POOL_SWIM_MINUTES} minutes at a time, then come out for a break before going back
+                in — tired dogs and deep water don&apos;t mix.
               </Lede>
               <div className="mt-8 flex flex-wrap gap-3">
-                <CTA href="#plan">Add it to your session</CTA>
+                <CTA href="#plan">Plan your session</CTA>
                 <CTA href="/the-park/bone-pool" tone="outline">
                   See the pool
                 </CTA>
               </div>
             </div>
             <div className="space-y-4 lg:pt-10">
-              <ExampleLine label="1 dog · 1 hour · no pool" value={rupees(1000)} />
-              <ExampleLine label="1 dog · 2 hours · pool" value={rupees(2000)} sub="₹1,500 session + ₹500 pool" />
-              <ExampleLine label="2 dogs · 2 hours · pool" value={rupees(4000)} sub="₹3,000 session + ₹1,000 pool" />
-              <ExampleLine label="3 dogs · 3 hours · no pool" value={rupees(6750)} />
+              {examples.map((e) => (
+                <ExampleLine key={e.label} label={e.label} value={rupees(e.q.total)} sub={e.sub(e.q)} />
+              ))}
             </div>
           </div>
         </Container>
@@ -224,7 +248,7 @@ export default function SessionsPage() {
 
             <Card className="flex flex-col">
               <Eyebrow className="text-canopy-700">Staying at {family.bsf.abbr}</Eyebrow>
-              <h3 className="font-display text-xl font-semibold">2 hours + pool, free</h3>
+              <h3 className="font-display text-xl font-semibold">2 hours, pool included, free</h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed opacity-75">
                 Complimentary with a same-stay night at {family.bsf.name}. Not a fixed slot — the
                 front desk fits you around the day&apos;s bookings.

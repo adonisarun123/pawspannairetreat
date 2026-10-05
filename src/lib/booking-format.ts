@@ -59,9 +59,12 @@ export function customerWhatsApp(phone: string, message: string): string {
 type MessageBooking = {
   ref: string;
   customer_name: string;
+  mode: "shared" | "private";
   dogs: number;
   hours: number;
-  pool: boolean;
+  adults: number;
+  kids: number;
+  under5: number;
   starts_at: string | null;
   ends_at: string | null;
   quoted_total: number;
@@ -74,12 +77,22 @@ export function acceptMessage(b: MessageBooking, mapsLink: string): string {
     "",
     `Booking: ${b.ref}`,
     `When: ${slotLabel(b.starts_at, b.ends_at)}`,
-    `Dogs: ${b.dogs} · ${b.hours} hr${b.hours > 1 ? "s" : ""}${b.pool ? " · pool added" : ""}`,
+    `Session: ${b.mode === "private" ? "Private park" : "Shared park"} · ${b.dogs} dog${b.dogs > 1 ? "s" : ""} · ${b.hours} hr${b.hours > 1 ? "s" : ""} (pool included)`,
+    `Guests: ${peopleLabel(b)}`,
     `Total: ₹${b.quoted_total.toLocaleString("en-IN")}`,
     "",
     `Directions: ${mapsLink}`,
     "See you and your pack soon!",
   ].join("\n");
+}
+
+export function peopleLabel(b: { adults: number; kids: number; under5: number }): string {
+  const parts = [
+    b.adults ? `${b.adults} adult${b.adults > 1 ? "s" : ""} (12+)` : "",
+    b.kids ? `${b.kids} child${b.kids > 1 ? "ren" : ""} 5–12` : "",
+    b.under5 ? `${b.under5} under 5` : "",
+  ].filter(Boolean);
+  return parts.length ? parts.join(", ") : "None listed";
 }
 
 export function rejectMessage(b: MessageBooking): string {

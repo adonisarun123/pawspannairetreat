@@ -14,7 +14,7 @@ export const faqs: QA[] = [
   },
   {
     q: "Will my dog be mixed with dogs it doesn't know?",
-    a: "No. Every slot is booked by one party. An exclusive session is you alone; a group session is two or more dogs who already know each other, booked together. We don't put strangers' dogs in the same run — there is no on-site handler yet, and we're not taking that risk with your dog.",
+    a: "In a shared session, yes — dogs from different families share the park, never more than 10 at once. Every dog must be vaccinated and friendly, you stay with yours the whole time, and a dog showing aggression is asked to take a break or leave the shared park. If you'd rather have no other dogs around, book the park privately (₹1,000 per dog per hour, minimum 4 dogs).",
   },
   {
     q: "Are there breeds or temperaments you won't take?",
@@ -22,15 +22,15 @@ export const faqs: QA[] = [
   },
   {
     q: "Is the pool included in the session price?",
-    a: `No — the pool is a paid add-on at ₹250 per dog per hour, on top of the session rate. It's ${facts.poolSqFt} sq ft, shaped like a bone, and it's the one thing here you won't find on a long walk.`,
+    a: `Yes — the pool is included with every session, shared or private. It's ${facts.poolSqFt} sq ft, shaped like a bone. Dogs swim 15 minutes at a time, then come out for a break before going back in.`,
   },
   {
     q: "Can I bring my kids?",
-    a: "Yes, and plenty of people do. Children are welcome throughout the park and at Tyre Cafe, but they stay with an adult and out of the pool while dogs are swimming. The tyre installations were built for dogs; kids climb them anyway.",
+    a: "Yes, and plenty of people do. One person per dog comes free; beyond that, children under 5 are free, 5–12 year-olds are ₹300 per hour and anyone 12+ is ₹500 per hour (introductory pricing). Children stay with an adult and out of the pool while dogs are swimming.",
   },
   {
     q: "What should I bring?",
-    a: "A leash for the walk from the gate, your dog's vaccination card on the first visit, a towel if you're adding the pool, and water for yourself. Leave the toys and food at home — outside toys cause fights and outside food attracts everything on the farm.",
+    a: "A leash for the walk from the gate, your dog's vaccination card on the first visit, a towel for after the pool, and water for yourself. Leave the toys and food at home — outside toys cause fights and outside food attracts everything on the farm.",
   },
   {
     q: "What happens if it rains?",
@@ -61,8 +61,12 @@ export const parkRules: { rule: string; why: string }[] = [
     why: "The stretch between parking and the gate is shared with the working farm. Off-leash starts inside the fence, not in the car park.",
   },
   {
-    rule: "Unfamiliar dogs are never mixed",
-    why: "Group slots are for one party's dogs who already know each other. Until we have a full-time on-site handler, we won't pair strangers.",
+    rule: "Never more than 10 dogs in the park",
+    why: "Shared sessions mix families' dogs, so we cap the numbers. Dogs must be vaccinated and friendly; a dog showing aggression takes a break or leaves the shared park.",
+  },
+  {
+    rule: "15 minutes in the pool, then a break",
+    why: "Swimming tires dogs faster than running. Out after 15 minutes, rest, then back in.",
   },
   {
     rule: "Tell us before you arrive if your dog is reactive",

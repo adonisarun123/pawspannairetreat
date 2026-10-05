@@ -75,8 +75,8 @@ export default async function JournalPost({ params }: { params: Promise<{ slug: 
           <Card className="mt-14">
             <h2 className="font-display text-xl font-semibold">Come and see it</h2>
             <p className="mt-3 text-sm leading-relaxed opacity-80">
-              Sessions are booked by the hour, one party per slot, every day. The pool is an add-on
-              on any session.
+              Sessions are booked by the hour, every day — share the park or book it privately. The
+              pool is included with every session.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <CTA href="/sessions#plan">Book a session</CTA>

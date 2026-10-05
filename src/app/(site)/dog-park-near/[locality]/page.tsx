@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHero } from "@/components/page-hero";
 import { CTA, Card, Container, Eyebrow, Lede, Section, Stat, Title } from "@/components/ui";
 import { localities, localityBySlug } from "@/lib/localities";
-import { BASE_RATE, DISCOUNT_RATE, POOL_RATE, rupees } from "@/lib/pricing";
+import { PRIVATE_MIN_DOGS, PRIVATE_RATE, SHARED_RATE, rupees } from "@/lib/pricing";
 import { JsonLd, breadcrumbSchema, faqSchemaFrom, pageMeta } from "@/lib/seo";
 import { facts, hours } from "@/lib/site";
 
@@ -90,12 +90,12 @@ export default async function LocalityPage({
               <Card>
                 <h2 className="font-display text-lg font-semibold">What a session costs</h2>
                 <ul className="mt-4 space-y-2.5 text-sm leading-relaxed opacity-80">
-                  <li>{rupees(BASE_RATE)} per dog for the first hour.</li>
+                  <li>Shared park: {rupees(SHARED_RATE)} per dog per hour.</li>
                   <li>
-                    {rupees(DISCOUNT_RATE)} per dog per hour once you book two hours or more, or
-                    bring two or more dogs — applied to the whole booking.
+                    Private park: {rupees(PRIVATE_RATE)} per dog per hour, minimum{" "}
+                    {PRIVATE_MIN_DOGS} dogs.
                   </li>
-                  <li>Pool add-on {rupees(POOL_RATE)} per dog per hour.</li>
+                  <li>Pool included. One person per dog free. Introductory pricing.</li>
                 </ul>
                 <div className="mt-6">
                   <CTA href="/sessions" tone="canopy">
@@ -107,8 +107,8 @@ export default async function LocalityPage({
                 <h2 className="font-display text-lg font-semibold">Before you drive out</h2>
                 <p className="mt-2 text-sm leading-relaxed opacity-80">
                   Bring your dog&apos;s vaccination card on the first visit, leave toys and food at
-                  home, and tell us in advance if your dog is reactive. Every slot is booked by one
-                  party — we never mix unfamiliar dogs.
+                  home, and tell us in advance if your dog is reactive — a private booking keeps other dogs
+                  out of your slot.
                 </p>
                 <p className="mt-4 text-sm">
                   <Link

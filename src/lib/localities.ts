@@ -35,7 +35,7 @@ export const localities: Locality[] = [
     route: "Whitefield → Sarjapur Road → Attibele → Hosur Road → Shoolagiri Road",
     title: "Dog park near Whitefield",
     description:
-      "Paws Pannai Retreat is 44.9 km from Whitefield — a one-acre off-leash dog park with a bone-shaped dog swimming pool on a working farm near Hosur. Hourly sessions, one party per slot.",
+      "Paws Pannai Retreat is 44.9 km from Whitefield — a one-acre off-leash dog park with a bone-shaped dog swimming pool on a working farm near Hosur. Hourly sessions, shared or private.",
     lede:
       "Whitefield has more large dogs living in apartments than almost anywhere else in the city, and correspondingly little ground to run them on. At 44.9 km this is a real drive, but it is the same drive people already make for a weekend lunch — with a much better outcome for the dog.",
     caveat:
@@ -109,7 +109,7 @@ export const localities: Locality[] = [
     route: "HSR Layout → Silk Board → Hosur Road (NH 44) → Shoolagiri Road",
     title: "Dog park near HSR Layout",
     description:
-      "Around 58.3 km from HSR Layout via Hosur Road — a one-acre off-leash dog park and dog swimming pool on a working farm near Hosur. Booked by the hour, one party per slot.",
+      "Around 58.3 km from HSR Layout via Hosur Road — a one-acre off-leash dog park and dog swimming pool on a working farm near Hosur. Booked by the hour, shared or private.",
     lede:
       "HSR has one of the densest dog-owning populations in Bangalore and some of its least dog-friendly public space. At 58.3 km this is the longest of the three runs, and the one people most often turn into a proper day out rather than a quick trip.",
     caveat:
@@ -117,15 +117,15 @@ export const localities: Locality[] = [
     points: [
       {
         title: "Make it a group booking",
-        body: "HSR dogs tend to already have a walking crew. Two or more dogs who know each other, booked together by one party, drop to the lower rate from the first hour — which splits the drive between you as well.",
+        body: "HSR dogs tend to already have a walking crew. Four or more dogs can take the whole park privately at ₹1,000 per dog per hour — or share the park at ₹500 per dog per hour — and you split the drive between you as well.",
       },
       {
         title: "Space HSR does not have",
         body: "An acre of fenced, off-leash ground with separated zones for puppies and for reactive dogs. Nothing in HSR comes close, which is exactly why the drive is on the table.",
       },
       {
-        title: "One party per slot",
-        body: "We never mix unfamiliar dogs. If your dog is reactive around strange dogs — common in a neighbourhood this dense — that constraint is the whole reason to come here rather than a public park.",
+        title: "Private when you need it",
+        body: "If your dog is reactive around strange dogs — common in a neighbourhood this dense — book the park privately and no other dogs share your slot. That is the whole reason to come here rather than a public park.",
       },
     ],
     faqs: [
@@ -135,7 +135,7 @@ export const localities: Locality[] = [
       },
       {
         q: "Can a group of us from HSR book together?",
-        a: "Yes, and it is the cheapest way to do it. Two or more dogs who already know each other, booked as one party, get the discounted rate from the first hour. We do not put strangers' dogs together.",
+        a: "Yes. Share the park at ₹500 per dog per hour, or with four or more dogs take the whole park privately at ₹1,000 per dog per hour so no other dogs join you. One person per dog comes free (introductory pricing).",
       },
     ],
   },

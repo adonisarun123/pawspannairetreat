@@ -4,9 +4,9 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { CLOSE_MIN, OPEN_MIN } from "@/lib/booking-format";
-import { MAX_HOURS } from "@/lib/pricing";
+import { MAX_DOGS, MAX_HOURS, type SessionMode } from "@/lib/pricing";
 import { assertPermission, getCurrentUser, type Role } from "@/lib/server/auth";
-import { createBooking, findConflicts, getBooking, logEvent } from "@/lib/server/bookings";
+import { availabilityProblem, bookingsInWindow, createBooking, getBooking, logEvent } from "@/lib/server/bookings";
 import { sql } from "@/lib/server/db";
 import { createSession, deleteSession } from "@/lib/server/session";
 
@@ -68,18 +68,6 @@ function slotFrom(form: FormData, hours: number): { startsAt: string; endsAt: st
   return { startsAt: `${date} ${t(start)}`, endsAt: `${date} ${t(end)}` };
 }
 
-async function conflictMessage(startsAt: string, endsAt: string, excludeId?: number) {
-  const c = await findConflicts(startsAt, endsAt, excludeId);
-  if (c.bookings.length) {
-    const b = c.bookings[0];
-    return `Clashes with ${b.ref} (${b.customer_name}) at ${b.starts_at.slice(11)}–${b.ends_at.slice(11)}.`;
-  }
-  if (c.blocks.length) {
-    return `That time is blocked${c.blocks[0].reason ? ` (${c.blocks[0].reason})` : ""}.`;
-  }
-  return null;
-}
-
 export async function acceptBooking(_: FormState, form: FormData): Promise<FormState> {
   const user = await assertPermission("bookings.decide");
   const id = int(form, "id");
@@ -89,7 +77,7 @@ export async function acceptBooking(_: FormState, form: FormData): Promise<FormS
 
   const slot = slotFrom(form, b.hours);
   if ("error" in slot) return { error: slot.error };
-  const clash = await conflictMessage(slot.startsAt, slot.endsAt, id);
+  const clash = await availabilityProblem(slot.startsAt, slot.endsAt, b.mode, b.dogs, id);
   if (clash) return { error: clash };
 
   try {
@@ -99,7 +87,6 @@ export async function acceptBooking(_: FormState, form: FormData): Promise<FormS
         decided_by = ${user.id}, decided_at = now(), updated_at = now()
       WHERE id = ${id} AND status = 'pending'`;
   } catch (e) {
-    if (String(e).includes("no_double_booking")) return { error: "Someone just booked an overlapping slot. Pick another time." };
     throw e;
   }
   await logEvent(id, user.id, "accepted", `${slot.startsAt} – ${slot.endsAt.slice(11)}`);
@@ -143,15 +130,10 @@ export async function rescheduleBooking(_: FormState, form: FormData): Promise<F
   if (!b || b.status !== "accepted") return { error: "Only accepted bookings can be rescheduled." };
   const slot = slotFrom(form, b.hours);
   if ("error" in slot) return { error: slot.error };
-  const clash = await conflictMessage(slot.startsAt, slot.endsAt, id);
+  const clash = await availabilityProblem(slot.startsAt, slot.endsAt, b.mode, b.dogs, id);
   if (clash) return { error: clash };
-  try {
-    await sql`UPDATE bookings SET starts_at = ${slot.startsAt}::timestamp, ends_at = ${slot.endsAt}::timestamp,
-      updated_at = now() WHERE id = ${id}`;
-  } catch (e) {
-    if (String(e).includes("no_double_booking")) return { error: "That overlaps another accepted booking." };
-    throw e;
-  }
+  await sql`UPDATE bookings SET starts_at = ${slot.startsAt}::timestamp, ends_at = ${slot.endsAt}::timestamp,
+    updated_at = now() WHERE id = ${id}`;
   await logEvent(id, user.id, "rescheduled", `${slot.startsAt} – ${slot.endsAt.slice(11)}`);
   revalidatePath("/admin", "layout");
   return { ok: "Rescheduled." };
@@ -168,12 +150,17 @@ export async function createManualBooking(_: FormState, form: FormData): Promise
   const user = await assertPermission("bookings.create");
   const customerName = str(form, "name");
   const phone = str(form, "phone");
+  const mode: SessionMode = str(form, "mode") === "private" ? "private" : "shared";
   const dogs = int(form, "dogs");
   const hours = int(form, "hours");
-  const pool = form.get("pool") === "on";
+  const people = {
+    adults: Math.max(0, int(form, "adults") || 0),
+    kids: Math.max(0, int(form, "kids") || 0),
+    under5: Math.max(0, int(form, "under5") || 0),
+  };
   const acceptNow = form.get("acceptNow") === "on";
   if (!customerName || phone.replace(/\D/g, "").length < 10) return { error: "Name and a 10-digit phone number are required." };
-  if (!(dogs >= 1 && dogs <= 10)) return { error: "Dogs must be 1–10." };
+  if (!(dogs >= 1 && dogs <= MAX_DOGS)) return { error: `Dogs must be 1–${MAX_DOGS}.` };
   if (!(hours >= 1 && hours <= MAX_HOURS)) return { error: `Hours must be 1–${MAX_HOURS}.` };
 
   const date = str(form, "date") || null;
@@ -184,13 +171,13 @@ export async function createManualBooking(_: FormState, form: FormData): Promise
   if (acceptNow) {
     const s = slotFrom(form, hours);
     if ("error" in s) return { error: s.error };
-    const clash = await conflictMessage(s.startsAt, s.endsAt);
+    const clash = await availabilityProblem(s.startsAt, s.endsAt, mode, dogs);
     if (clash) return { error: clash };
     slot = s;
   }
 
   const created = await createBooking(
-    { customerName, phone, dogs, hours, pool, requestedDate: date, requestedStartMin: start, notes: str(form, "notes") || null },
+    { customerName, phone, mode, dogs, hours, ...people, requestedDate: date, requestedStartMin: start, notes: str(form, "notes") || null },
     "manual",
     user.id,
   );
@@ -216,9 +203,9 @@ export async function addBlock(_: FormState, form: FormData): Promise<FormState>
   const t = (m: number) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
   const startsAt = `${date} ${t(start)}`;
   const endsAt = `${date} ${t(end)}`;
-  const c = await findConflicts(startsAt, endsAt);
-  if (c.bookings.length) {
-    return { error: `${c.bookings.length} accepted booking(s) fall in that window (e.g. ${c.bookings[0].ref}). Move or cancel them first.` };
+  const inWindow = await bookingsInWindow(startsAt, endsAt);
+  if (inWindow.length) {
+    return { error: `${inWindow.length} accepted booking(s) fall in that window (e.g. ${inWindow[0].ref}). Move or cancel them first.` };
   }
   await sql`INSERT INTO blocked_slots (starts_at, ends_at, reason, created_by)
     VALUES (${startsAt}::timestamp, ${endsAt}::timestamp, ${str(form, "reason") || null}, ${user.id})`;

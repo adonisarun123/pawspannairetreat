@@ -1,7 +1,7 @@
 import { faqs, parkRules, tyreElements } from "@/lib/content";
 import { postsByDate } from "@/lib/journal";
 import { localities } from "@/lib/localities";
-import { BASE_RATE, DISCOUNT_RATE, MAX_DOGS, MAX_HOURS, POOL_RATE } from "@/lib/pricing";
+import { ADULT_RATE, CHILD_RATE, MAX_HOURS, PARK_CAPACITY, POOL_SWIM_MINUTES, PRIVATE_MIN_DOGS, PRIVATE_RATE, SHARED_RATE } from "@/lib/pricing";
 import { contact, driveTimes, facts, family, hours, location, site } from "@/lib/site";
 
 /**
@@ -57,10 +57,12 @@ The difference between a dog park, daycare and boarding is set out at ${url}/dog
 
 ## Pricing
 
-- Base rate: ₹${BASE_RATE} per dog per hour
-- Discounted rate: ₹${DISCOUNT_RATE} per dog per hour, applied to the whole booking once it runs 2+ hours or includes 2+ dogs
-- Pool add-on: ₹${POOL_RATE} per dog per hour, on top of the session rate
-- Maximum ${MAX_HOURS} continuous hours and ${MAX_DOGS} dogs per booking
+Introductory pricing:
+- Shared park: ₹${SHARED_RATE} per dog per hour (dogs from different families share the park)
+- Private park (whole park, no other dogs): ₹${PRIVATE_RATE} per dog per hour, minimum ${PRIVATE_MIN_DOGS} dogs
+- Pool included with every session; dogs swim ${POOL_SWIM_MINUTES} minutes at a time, then take a break
+- People: one person per dog free; beyond that, under 5 free, 5–12 ₹${CHILD_RATE}/hr, 12+ ₹${ADULT_RATE}/hr
+- Maximum ${PARK_CAPACITY} dogs in the park at once; bookings up to ${MAX_HOURS} continuous hours
 - Every day visitor receives 15% off a subsequent night at ${family.bsf.name}
 
 ## Getting there

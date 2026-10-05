@@ -1,6 +1,6 @@
 import "server-only";
 import { randomInt } from "node:crypto";
-import { quote } from "@/lib/pricing";
+import { PARK_CAPACITY, quote, type SessionMode } from "@/lib/pricing";
 import type { BookingStatus } from "@/lib/booking-format";
 import { sql } from "./db";
 
@@ -9,6 +9,10 @@ export type Booking = {
   ref: string;
   status: BookingStatus;
   source: "web" | "manual";
+  mode: SessionMode;
+  adults: number;
+  kids: number;
+  under5: number;
   customer_name: string;
   phone: string;
   dogs: number;
@@ -36,7 +40,7 @@ export type Block = {
 
 /* Every read goes through this select so timestamps come back as plain IST strings. */
 const COLS = sql`
-  b.id, b.ref, b.status, b.source, b.customer_name, b.phone, b.dogs, b.hours, b.pool,
+  b.id, b.ref, b.status, b.source, b.mode, b.adults, b.kids, b.under5, b.customer_name, b.phone, b.dogs, b.hours, b.pool,
   to_char(b.requested_date, 'YYYY-MM-DD') AS requested_date,
   b.requested_start_min,
   to_char(b.starts_at, 'YYYY-MM-DD"T"HH24:MI') AS starts_at,
@@ -115,39 +119,66 @@ export async function listBlocks(from: string, to: string): Promise<Block[]> {
     ORDER BY starts_at`) as Block[];
 }
 
-/** Anything that would clash with a slot: accepted bookings (other than this one) and blocks. */
-export async function findConflicts(startsAt: string, endsAt: string, excludeId?: number) {
-  const bookings = (await sql`
-    SELECT ref, customer_name,
-      to_char(starts_at, 'YYYY-MM-DD"T"HH24:MI') AS starts_at,
-      to_char(ends_at, 'YYYY-MM-DD"T"HH24:MI') AS ends_at
+/**
+ * Can a booking of `dogs` in `mode` take [startsAt, endsAt)? Returns a reason
+ * when it can't. Rules:
+ *  - blocked time is never bookable;
+ *  - a private booking needs the park empty — no other accepted booking overlaps;
+ *  - a shared booking can't overlap a private one, and the dogs already accepted
+ *    in overlapping shared bookings plus these must stay within PARK_CAPACITY.
+ *    (Overlapping bookings are summed — a conservative, never-over-capacity check.)
+ */
+export async function availabilityProblem(
+  startsAt: string,
+  endsAt: string,
+  mode: SessionMode,
+  dogs: number,
+  excludeId?: number,
+): Promise<string | null> {
+  const blocks = (await sql`
+    SELECT reason FROM blocked_slots
+    WHERE tsrange(starts_at, ends_at) && tsrange(${startsAt}::timestamp, ${endsAt}::timestamp)
+    LIMIT 1`) as { reason: string | null }[];
+  if (blocks.length) return `That time is blocked${blocks[0].reason ? ` (${blocks[0].reason})` : ""}.`;
+
+  const overlapping = (await sql`
+    SELECT ref, customer_name, mode, dogs,
+      to_char(starts_at, 'HH24:MI') AS s, to_char(ends_at, 'HH24:MI') AS e
     FROM bookings
     WHERE status = 'accepted' AND id <> ${excludeId ?? 0}
-      AND tsrange(starts_at, ends_at) && tsrange(${startsAt}::timestamp, ${endsAt}::timestamp)`) as {
-    ref: string;
-    customer_name: string;
-    starts_at: string;
-    ends_at: string;
-  }[];
-  const blocks = (await sql`
-    SELECT reason,
-      to_char(starts_at, 'YYYY-MM-DD"T"HH24:MI') AS starts_at,
-      to_char(ends_at, 'YYYY-MM-DD"T"HH24:MI') AS ends_at
-    FROM blocked_slots
-    WHERE tsrange(starts_at, ends_at) && tsrange(${startsAt}::timestamp, ${endsAt}::timestamp)`) as {
-    reason: string | null;
-    starts_at: string;
-    ends_at: string;
-  }[];
-  return { bookings, blocks };
+      AND tsrange(starts_at, ends_at) && tsrange(${startsAt}::timestamp, ${endsAt}::timestamp)
+    ORDER BY starts_at`) as { ref: string; customer_name: string; mode: SessionMode; dogs: number; s: string; e: string }[];
+
+  const priv = overlapping.find((o) => o.mode === "private");
+  if (priv) return `The park is booked privately by ${priv.customer_name} (${priv.ref}) ${priv.s}–${priv.e}.`;
+  if (mode === "private" && overlapping.length) {
+    const o = overlapping[0];
+    return `A private booking needs the park empty, but ${o.customer_name} (${o.ref}, ${o.dogs} dog${o.dogs > 1 ? "s" : ""}) is booked ${o.s}–${o.e}.`;
+  }
+  const already = overlapping.reduce((n, o) => n + o.dogs, 0);
+  if (already + dogs > PARK_CAPACITY) {
+    return `Only ${Math.max(0, PARK_CAPACITY - already)} of ${PARK_CAPACITY} places left in that time (${already} dog${already === 1 ? "" : "s"} already booked).`;
+  }
+  return null;
+}
+
+/** Overlap check used when blocking time: accepted bookings inside the window. */
+export async function bookingsInWindow(startsAt: string, endsAt: string) {
+  return (await sql`
+    SELECT ref FROM bookings
+    WHERE status = 'accepted'
+      AND tsrange(starts_at, ends_at) && tsrange(${startsAt}::timestamp, ${endsAt}::timestamp)`) as { ref: string }[];
 }
 
 export type NewBooking = {
   customerName: string;
   phone: string;
+  mode: SessionMode;
   dogs: number;
   hours: number;
-  pool: boolean;
+  adults: number;
+  kids: number;
+  under5: number;
   requestedDate: string | null;
   requestedStartMin: number | null;
   notes: string | null;
@@ -159,16 +190,16 @@ export async function createBooking(
   userId: number | null,
   preferredRef?: string,
 ): Promise<{ id: number; ref: string; total: number }> {
-  const q = quote({ dogs: input.dogs, hours: input.hours, pool: input.pool });
+  const q = quote(input);
   for (let attempt = 0; attempt < 5; attempt++) {
     const ref = attempt === 0 && preferredRef && isValidRef(preferredRef) ? preferredRef : newRef();
     try {
       const rows = await sql`
-        INSERT INTO bookings (ref, source, customer_name, phone, dogs, hours, pool,
-          requested_date, requested_start_min, quoted_total, notes, created_by)
-        VALUES (${ref}, ${source}, ${input.customerName}, ${input.phone}, ${q.dogs}, ${q.hours},
-          ${q.pool}, ${input.requestedDate}, ${input.requestedStartMin}, ${q.total}, ${input.notes},
-          ${userId})
+        INSERT INTO bookings (ref, source, mode, customer_name, phone, dogs, hours, adults, kids, under5,
+          pool, requested_date, requested_start_min, quoted_total, notes, created_by)
+        VALUES (${ref}, ${source}, ${q.mode}, ${input.customerName}, ${input.phone}, ${q.dogs}, ${q.hours},
+          ${q.people.adults}, ${q.people.kids}, ${q.people.under5}, true,
+          ${input.requestedDate}, ${input.requestedStartMin}, ${q.total}, ${input.notes}, ${userId})
         RETURNING id`;
       const id = rows[0].id as number;
       await logEvent(id, userId, "created", source === "web" ? "Requested on the website" : "Added by staff");

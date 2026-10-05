@@ -12,7 +12,7 @@ import {
   Title,
 } from "@/components/ui";
 import { media } from "@/lib/media";
-import { rupees, BASE_RATE, DISCOUNT_RATE, POOL_RATE } from "@/lib/pricing";
+import { rupees, PARK_CAPACITY, PRIVATE_MIN_DOGS, PRIVATE_RATE, SHARED_RATE } from "@/lib/pricing";
 import { JsonLd, offerSchema, pageMeta } from "@/lib/seo";
 import { driveTimes, facts, family, hours, location } from "@/lib/site";
 
@@ -52,7 +52,7 @@ export default function HomePage() {
               </div>
 
               <p className="mt-6 text-sm opacity-70">
-                From {rupees(BASE_RATE)} per dog · open {hours.display}
+                Introductory pricing from {rupees(SHARED_RATE)} per dog per hour · open {hours.display}
               </p>
             </div>
 
@@ -117,7 +117,7 @@ export default function HomePage() {
             <PillarCard
               kicker="Pool"
               title="The Bone Pool"
-              body={`${facts.poolSqFt.toLocaleString("en-IN")} sq ft of shallow-to-deep water, shaped like a bone. Add it to any session for ${rupees(POOL_RATE)} per dog per hour.`}
+              body={`${facts.poolSqFt.toLocaleString("en-IN")} sq ft of shallow-to-deep water, shaped like a bone. Included with every session.`}
               href="/the-park/bone-pool"
               cta="The Bone Pool"
               slot={media.bonePool}
@@ -134,8 +134,8 @@ export default function HomePage() {
               <Eyebrow className="text-canopy-700">Sessions</Eyebrow>
               <Title>Booked by the hour, priced by the dog</Title>
               <Lede>
-                Two ways in. Both land on the same discounted rate — one rewards staying longer,
-                the other rewards bringing the crew.
+                Two ways in, both with the pool included and one person per dog free. Introductory
+                pricing.
               </Lede>
               <div className="mt-8 flex flex-wrap gap-3">
                 <CTA href="/sessions#plan">Book a Session</CTA>
@@ -148,38 +148,34 @@ export default function HomePage() {
             <div className="grid gap-5 sm:grid-cols-2">
               <Card className="flex flex-col">
                 <p className="text-xs font-semibold tracking-[0.14em] text-canopy-700 uppercase">
-                  Exclusive
+                  Shared Park
                 </p>
-                <h3 className="mt-3 font-display text-xl font-semibold">
-                  The place to yourselves
-                </h3>
+                <h3 className="mt-3 font-display text-xl font-semibold">Play alongside other dogs</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed opacity-75">
-                  One dog, or your own crew, in your own booked slot. Stay two hours or more and
-                  the whole slot re-prices at the lower rate.
+                  Your dogs share the park with other friendly, vaccinated dogs — never more than{" "}
+                  {PARK_CAPACITY} inside at once.
                 </p>
                 <p className="mt-5 font-display text-2xl font-semibold">
-                  {rupees(BASE_RATE)}
-                  <span className="text-base font-normal opacity-60"> first hour</span>
+                  {rupees(SHARED_RATE)}
+                  <span className="text-base font-normal opacity-60"> / dog / hr</span>
                 </p>
-                <p className="text-sm opacity-70">
-                  then {rupees(DISCOUNT_RATE)} / dog / hr
-                </p>
+                <p className="text-sm opacity-70">pool included</p>
               </Card>
 
               <Card className="flex flex-col">
                 <p className="text-xs font-semibold tracking-[0.14em] text-pool-500 uppercase">
-                  Group
+                  Private Park
                 </p>
-                <h3 className="mt-3 font-display text-xl font-semibold">Bring your own crew</h3>
+                <h3 className="mt-3 font-display text-xl font-semibold">The whole park to yourselves</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed opacity-75">
-                  Two or more dogs who already know each other, booked together by one party. We
-                  don&apos;t mix unfamiliar dogs.
+                  No other dogs in your slot. Best for a crew of friends&apos; dogs, or a dog who
+                  needs space.
                 </p>
                 <p className="mt-5 font-display text-2xl font-semibold">
-                  {rupees(DISCOUNT_RATE)}
+                  {rupees(PRIVATE_RATE)}
                   <span className="text-base font-normal opacity-60"> / dog / hr</span>
                 </p>
-                <p className="text-sm opacity-70">from the first hour</p>
+                <p className="text-sm opacity-70">minimum {PRIVATE_MIN_DOGS} dogs</p>
               </Card>
             </div>
           </div>

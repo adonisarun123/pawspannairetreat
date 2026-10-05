@@ -24,10 +24,24 @@ function mondayOf(iso: string): string {
   return addDays(iso, dow === 0 ? -6 : 1 - dow);
 }
 
-type Item =
+type Item = (
   | { kind: "booking"; b: Booking; start: number; end: number }
   | { kind: "request"; b: Booking; start: number; end: number }
-  | { kind: "block"; k: Block; start: number; end: number };
+  | { kind: "block"; k: Block; start: number; end: number }
+) & { lane?: number; lanes?: number };
+
+/** Shared sessions overlap, so give overlapping items side-by-side lanes. */
+function assignLanes(items: Item[]) {
+  const laneEnds: number[] = [];
+  for (const it of items) {
+    let lane = laneEnds.findIndex((end) => end <= it.start);
+    if (lane === -1) lane = laneEnds.length;
+    laneEnds[lane] = it.end;
+    it.lane = lane;
+  }
+  const lanes = Math.max(1, laneEnds.length);
+  for (const it of items) it.lanes = lanes;
+}
 
 function itemsForDay(day: string, bookings: Booking[], blocks: Block[]): { timed: Item[]; untimed: Booking[] } {
   const timed: Item[] = [];
@@ -47,18 +61,22 @@ function itemsForDay(day: string, bookings: Booking[], blocks: Block[]): { timed
     if (k.starts_at.slice(0, 10) <= day && k.ends_at.slice(0, 10) >= day && e > s) timed.push({ kind: "block", k, start: s, end: e });
   }
   timed.sort((a, z) => a.start - z.start);
+  assignLanes(timed);
   return { timed, untimed };
 }
 
 function ItemBox({ item, absolute }: { item: Item; absolute?: boolean }) {
+  const lanes = item.lanes ?? 1;
   const style = absolute
     ? {
+        left: `calc(${((item.lane ?? 0) / lanes) * 100}% + 2px)`,
+        width: `calc(${100 / lanes}% - 4px)`,
         top: Math.max(0, item.start - OPEN_MIN) * PX_PER_MIN,
         height: Math.max(22, (Math.min(item.end, CLOSE_MIN) - Math.max(item.start, OPEN_MIN)) * PX_PER_MIN - 2),
       }
     : undefined;
   const time = `${minutesLabel(item.start)} – ${minutesLabel(item.end)}`;
-  const base = cx("overflow-hidden rounded-lg px-2 py-1 text-xs leading-tight", absolute && "absolute inset-x-1");
+  const base = cx("overflow-hidden rounded-lg px-2 py-1 text-xs leading-tight", absolute && "absolute");
   if (item.kind === "block") {
     return (
       <div style={style} className={cx(base, "bg-[repeating-linear-gradient(45deg,var(--color-bone-300),var(--color-bone-300)_6px,var(--color-bone-200)_6px,var(--color-bone-200)_12px)] text-bone-700")}>
@@ -75,15 +93,19 @@ function ItemBox({ item, absolute }: { item: Item; absolute?: boolean }) {
       className={cx(
         base,
         "block transition-opacity hover:opacity-85",
-        pending ? "border border-dashed border-tamarind-500 bg-mango-100 text-tamarind-600" : "bg-canopy-600 text-bone-50",
+        pending
+          ? "border border-dashed border-tamarind-500 bg-mango-100 text-tamarind-600"
+          : item.b.mode === "private"
+            ? "bg-pool-500 text-white"
+            : "bg-canopy-600 text-bone-50",
       )}
     >
       <p className="truncate font-semibold">
-        {pending ? "Request · " : ""}
+        {pending ? "Request · " : item.b.mode === "private" ? "Private · " : ""}
         {item.b.customer_name}
       </p>
       <p className="truncate opacity-85">
-        {time} · {item.b.dogs}🐕{item.b.pool ? " · pool" : ""}
+        {time} · {item.b.dogs} dog{item.b.dogs > 1 ? "s" : ""}
       </p>
     </Link>
   );
@@ -113,7 +135,8 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
         }
       />
       <div className="mb-4 flex flex-wrap gap-4 text-xs opacity-80">
-        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-canopy-600" /> Accepted</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-canopy-600" /> Shared (accepted)</span>
+        <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-pool-500" /> Private (accepted)</span>
         <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded border border-dashed border-tamarind-500 bg-mango-100" /> Pending request</span>
         <span className="inline-flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-bone-300" /> Blocked</span>
       </div>

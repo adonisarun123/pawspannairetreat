@@ -7,7 +7,7 @@ import { hours } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Park Rules",
   description:
-    "The rules at Paws Pannai Retreat and the reason behind each one — leash to the gate, no mixing of unfamiliar dogs, no outside toys or food, vaccination proof on the first visit.",
+    "The rules at Paws Pannai Retreat and the reason behind each one — leash to the gate, ten dogs at most, 15-minute swims, no outside toys or food, vaccination proof on the first visit.",
   path: "/plan-your-visit/park-rules",
 });
 
@@ -49,14 +49,12 @@ export default function ParkRulesPage() {
           <div className="grid gap-6 lg:grid-cols-2">
             <Card tone="dark">
               <Eyebrow className="text-mango-300">The one we won&apos;t bend</Eyebrow>
-              <h2 className="font-display text-xl font-semibold">
-                We do not mix unfamiliar dogs
-              </h2>
+              <h2 className="font-display text-xl font-semibold">Ten dogs, friendly dogs</h2>
               <p className="mt-3 text-sm leading-relaxed opacity-85">
-                Every slot belongs to one party. A group session is dogs who already know each
-                other. Until there is a full-time on-site handler here, pairing strangers is a risk
-                we are not willing to take with someone else&apos;s dog — even when it costs us the
-                booking.
+                Never more than 10 dogs in the park at once. Shared sessions are for vaccinated,
+                friendly dogs, and you stay with yours the whole time. A dog showing aggression is
+                asked to take a break or leave the shared park. If your dog is reactive, book the
+                park privately — no other dogs in your slot.
               </p>
             </Card>
             <Card>

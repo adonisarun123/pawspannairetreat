@@ -10,6 +10,7 @@ import {
   dateLabel,
   minutesLabel,
   minutesOf,
+  peopleLabel,
   rejectMessage,
 } from "@/lib/booking-format";
 import { rupees } from "@/lib/pricing";
@@ -35,9 +36,10 @@ export default async function BookingPage({ params }: { params: Promise<{ id: st
 
   const facts: [string, string][] = [
     ["Phone", b.phone],
+    ["Session", b.mode === "private" ? "Private park (whole park)" : "Shared park"],
     ["Dogs", String(b.dogs)],
+    ["Guests", peopleLabel(b)],
     ["Length", `${b.hours} hour${b.hours > 1 ? "s" : ""}`],
-    ["Pool", b.pool ? "Yes" : "No"],
     ["Quoted total", rupees(b.quoted_total)],
     ["Asked for", `${b.requested_date ? dateLabel(b.requested_date) : "Flexible date"} · ${b.requested_start_min != null ? minutesLabel(b.requested_start_min) : "flexible time"}`],
     ["Source", b.source === "web" ? "Website" : "Added by staff"],

@@ -167,32 +167,24 @@ export function offerSchema() {
     "@type": "Product",
     name: "Dog park session at Paws Pannai Retreat",
     description:
-      "An hourly, per-dog session on a one-acre working farm near Hosur, with an optional bone-shaped pool add-on.",
+      "An hourly, per-dog session on a one-acre working farm near Hosur, bone-shaped pool included. Introductory pricing.",
     brand: { "@type": "Brand", name: site.name },
     offers: [
       {
         "@type": "Offer",
-        name: "Exclusive session — first hour",
+        name: "Shared park — per dog per hour",
+        price: 500,
+        priceCurrency: "INR",
+        availability: "https://schema.org/InStock",
+        url: `${site.url}/sessions`,
+      },
+      {
+        "@type": "Offer",
+        name: "Private park — per dog per hour (minimum 4 dogs)",
         price: 1000,
         priceCurrency: "INR",
         availability: "https://schema.org/InStock",
         url: `${site.url}/sessions`,
-      },
-      {
-        "@type": "Offer",
-        name: "Discounted rate — 2+ hours or 2+ dogs",
-        price: 750,
-        priceCurrency: "INR",
-        availability: "https://schema.org/InStock",
-        url: `${site.url}/sessions`,
-      },
-      {
-        "@type": "Offer",
-        name: "Pool add-on",
-        price: 250,
-        priceCurrency: "INR",
-        availability: "https://schema.org/InStock",
-        url: `${site.url}/sessions#pool`,
       },
     ],
   };

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PageHero } from "@/components/page-hero";
 import { CTA, Card, Container, Eyebrow, Lede, Section, Title } from "@/components/ui";
-import { BASE_RATE, DISCOUNT_RATE, POOL_RATE, rupees } from "@/lib/pricing";
+import { PRIVATE_MIN_DOGS, PRIVATE_RATE, SHARED_RATE, rupees } from "@/lib/pricing";
 import { JsonLd, breadcrumbSchema, faqSchemaFrom, pageMeta } from "@/lib/seo";
 import { family, hours } from "@/lib/site";
 
@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     q: "Can I leave my dog with you for the day and come back later?",
-    a: "No. Every session is booked by one party and you stay with your dog. There is no on-site handler taking custody of dogs, and we would rather say that plainly than imply a supervision service we do not run.",
+    a: "No. You stay with your dog for the whole session. There is no on-site handler taking custody of dogs, and we would rather say that plainly than imply a supervision service we do not run.",
   },
   {
     q: "Where do I go if I need somewhere for my dog while I travel?",
@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: "My dog is reactive around other dogs. Which of the three suits us?",
-    a: "Almost certainly a dog park booked exclusively, which is how every slot here works — we never mix unfamiliar dogs. Group daycare is usually the wrong answer for a reactive dog, because the whole model depends on dogs sharing space with strangers.",
+    a: "A private dog-park booking — the whole park to yourselves, with no other dogs in your slot. Group daycare is usually the wrong answer for a reactive dog, because the whole model depends on dogs sharing space with strangers.",
   },
 ];
 
@@ -53,8 +53,8 @@ const rows: { need: string; answer: string; why: string }[] = [
   },
   {
     need: "My dog is reactive and public parks are stressful",
-    answer: "Dog park, booked exclusively",
-    why: "One party per slot means no unfamiliar dogs. Group daycare is the wrong shape for this dog.",
+    answer: "Dog park, booked privately",
+    why: "A private slot means no unfamiliar dogs. Group daycare is the wrong shape for this dog.",
   },
   {
     need: "My puppy needs safe early experience",
@@ -180,10 +180,10 @@ export default function ComparisonPage() {
                   <p className="font-display text-lg font-semibold">We are</p>
                   <p className="mt-1 text-sm leading-relaxed opacity-75">
                     A one-acre off-leash dog park with a bone-shaped dog pool, on a working farm at
-                    Seekanapalli Village near Hosur, Tamil Nadu. Open {hours.short}. Sessions from{" "}
-                    {rupees(BASE_RATE)} per dog for the first hour, {rupees(DISCOUNT_RATE)} per dog
-                    per hour on two hours or more or two dogs or more, pool add-on{" "}
-                    {rupees(POOL_RATE)} per dog per hour.
+                    Seekanapalli Village near Hosur, Tamil Nadu. Open {hours.short}. Introductory pricing:
+                    shared sessions {rupees(SHARED_RATE)} per dog per hour, private sessions{" "}
+                    {rupees(PRIVATE_RATE)} per dog per hour (minimum {PRIVATE_MIN_DOGS} dogs), pool
+                    included.
                   </p>
                 </div>
                 <div className="border-l-2 border-tamarind-300 pl-5">

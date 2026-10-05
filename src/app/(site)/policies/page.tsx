@@ -44,7 +44,7 @@ const sections = [
     body: [
       "We do not turn dogs away by breed. We do require you to tell us honestly if your dog is reactive or has bitten before, so the netted zone can be made ready.",
       "Dogs remain under the care and control of their owner at all times, including at the pool. There is no on-site handler and no lifeguard.",
-      "We do not mix dogs from different parties. A group session is dogs who already know each other, booked together.",
+      "Shared sessions mix dogs from different families, with never more than 10 dogs in the park at once. Dogs must be vaccinated and friendly; a dog showing aggression will be asked to take a break or leave the shared park. Private sessions have no other dogs.",
       "You are responsible for any injury or damage caused by your dog while on the property.",
     ],
   },
@@ -52,7 +52,7 @@ const sections = [
     id: "pool",
     title: "Pool use",
     body: [
-      "The pool is a paid add-on and is used under owner supervision. Enter and leave through the marked graded entry.",
+      "The pool is included with every session and is used under owner supervision. Dogs come out after 15 minutes in the water and rest before going back in. Enter and leave through the marked graded entry.",
       "Bring your own towel. Rinse your dog at the exit point before returning to the park or your vehicle.",
       "Children are not permitted in the pool while dogs are swimming.",
     ],

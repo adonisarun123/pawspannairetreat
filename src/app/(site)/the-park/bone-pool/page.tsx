@@ -11,14 +11,14 @@ import {
   Title,
 } from "@/components/ui";
 import { media } from "@/lib/media";
-import { POOL_RATE, rupees } from "@/lib/pricing";
+import { POOL_SWIM_MINUTES } from "@/lib/pricing";
 import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { facts } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "The Bone Pool",
   description:
-    "A 1,050 sq ft dog swimming pool shaped like a bone, near Hosur. Graded entry, shallow to deep, added to any session for ₹250 per dog per hour.",
+    "A 1,050 sq ft dog swimming pool shaped like a bone, near Hosur. Graded entry, shallow to deep, included with every session.",
   path: "/the-park/bone-pool",
 });
 
@@ -35,7 +35,7 @@ export default function BonePoolPage() {
         ]}
         actions={
           <>
-            <CTA href="/sessions#plan">Add the pool to a session</CTA>
+            <CTA href="/sessions#plan">Book a session</CTA>
             <CTA href="/sessions#pool" tone="outline">
               Pool pricing
             </CTA>
@@ -72,7 +72,11 @@ export default function BonePoolPage() {
                 />
                 <Row
                   title="Deep end"
-                  body="A genuine swim. Strong swimmers can work here for an hour and sleep for a day."
+                  body="A genuine swim. Strong swimmers work hard here — which is why swims are capped at 15 minutes."
+                />
+                <Row
+                  title="15 minutes, then a break"
+                  body={`Dogs come out of the pool after ${POOL_SWIM_MINUTES} minutes and go back in after a rest. Tired dogs and deep water don't mix.`}
                 />
                 <Row
                   title="Rinse-off"
@@ -88,14 +92,10 @@ export default function BonePoolPage() {
             <div className="space-y-6">
               <Card>
                 <Eyebrow className="text-canopy-700">Pricing</Eyebrow>
-                <p className="font-display text-4xl font-semibold">
-                  +{rupees(POOL_RATE)}
-                  <span className="text-lg font-normal opacity-60"> / dog / hr</span>
-                </p>
+                <p className="font-display text-4xl font-semibold">Included</p>
                 <p className="mt-4 text-sm leading-relaxed opacity-75">
-                  On top of the session rate, on either tier. We price it as a premium rather than
-                  folding it into entry — it cost real money to build and it is genuinely the best
-                  thing here.
+                  The pool comes with every session, shared or private — no add-on, no surprise at
+                  the gate.
                 </p>
                 <div className="mt-6">
                   <CTA href="/sessions#plan">Work out your total</CTA>

@@ -31,8 +31,11 @@ export function BookingList({ bookings, showMoney }: { bookings: Booking[]; show
               <p className="mt-0.5 truncate text-sm opacity-75">{requestedLabel(b)}</p>
             </div>
             <div className="text-sm opacity-80 sm:text-right">
-              {b.dogs} dog{b.dogs > 1 ? "s" : ""} · {b.hours} hr{b.hours > 1 ? "s" : ""}
-              {b.pool ? " · pool" : ""}
+              <span className={b.mode === "private" ? "font-semibold text-pool-600" : ""}>
+                {b.mode === "private" ? "Private" : "Shared"}
+              </span>{" "}
+              · {b.dogs} dog{b.dogs > 1 ? "s" : ""} · {b.hours} hr{b.hours > 1 ? "s" : ""} ·{" "}
+              {b.adults + b.kids + b.under5} ppl
               {showMoney ? <span className="ml-2 font-medium">{rupees(b.quoted_total)}</span> : null}
             </div>
           </Link>

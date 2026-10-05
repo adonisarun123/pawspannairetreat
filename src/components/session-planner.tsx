@@ -2,12 +2,19 @@
 
 import { useMemo, useState } from "react";
 import {
+  ADULT_RATE,
+  CHILD_RATE,
   MAX_DOGS,
   MAX_HOURS,
   MIN_HOURS,
-  POOL_RATE,
+  PARK_CAPACITY,
+  POOL_SWIM_MINUTES,
+  PRIVATE_MIN_DOGS,
+  PRIVATE_RATE,
+  SHARED_RATE,
   quote,
   rupees,
+  type SessionMode,
 } from "@/lib/pricing";
 import { CLOSE_MIN, OPEN_MIN } from "@/lib/booking-format";
 import { contact, hours as openHours, whatsappLink } from "@/lib/site";
@@ -45,9 +52,12 @@ function newRef(): string {
 /* Component ----------------------------------------------------------- */
 
 export function SessionPlanner({ compact = false }: { compact?: boolean }) {
+  const [mode, setMode] = useState<SessionMode>("shared");
   const [dogs, setDogs] = useState(1);
   const [duration, setDuration] = useState(2);
-  const [pool, setPool] = useState(true);
+  const [adults, setAdults] = useState(1);
+  const [kids, setKids] = useState(0);
+  const [under5, setUnder5] = useState(0);
   const [date, setDate] = useState("");
   const [start, setStart] = useState<number | "">("");
   const [name, setName] = useState("");
@@ -58,7 +68,10 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
   const [formError, setFormError] = useState("");
 
   const starts = useMemo(() => startOptions(duration), [duration]);
-  const q = useMemo(() => quote({ dogs, hours: duration, pool }), [dogs, duration, pool]);
+  const q = useMemo(
+    () => quote({ mode, dogs, hours: duration, adults, kids, under5 }),
+    [mode, dogs, duration, adults, kids, under5],
+  );
 
   const startLabel = typeof start === "number" ? label(start) : "any time you have free";
   const endLabel = typeof start === "number" ? label(start + duration * 60) : "";
@@ -67,9 +80,10 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
     "Hi Paws Pannai — I'd like to book a session.",
     bookingRef ? `Booking ref: ${bookingRef}` : "",
     "",
+    `Session: ${mode === "private" ? "Private park (whole park)" : "Shared park"}`,
     `Dogs: ${dogs}`,
+    `People: ${adults} aged 12+, ${kids} aged 5–12, ${under5} under 5`,
     `Length: ${duration} hour${duration > 1 ? "s" : ""}`,
-    `Pool: ${pool ? "yes, please add it" : "not this time"}`,
     `Date: ${date || "flexible"}`,
     `Time: ${typeof start === "number" ? `${startLabel} – ${endLabel}` : "flexible"}`,
     `Estimated total: ${rupees(q.total)}`,
@@ -104,9 +118,12 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
           ref: bookingRef,
           name,
           phone,
+          mode,
           dogs,
           hours: duration,
-          pool,
+          adults,
+          kids,
+          under5,
           date: date || null,
           start: typeof start === "number" ? start : null,
           notes,
@@ -145,23 +162,46 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
           </div>
 
           <fieldset>
+            <legend className={labelCls}>Shared or private?</legend>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Choice
+                selected={mode === "shared"}
+                onClick={() => setMode("shared")}
+                label={`Shared park · ${rupees(SHARED_RATE)}/dog/hr`}
+              />
+              <Choice
+                selected={mode === "private"}
+                onClick={() => setMode("private")}
+                label={`Private park · ${rupees(PRIVATE_RATE)}/dog/hr`}
+              />
+            </div>
+            <p className="mt-2.5 text-xs leading-relaxed opacity-65">
+              {mode === "shared"
+                ? `Your dogs play alongside other families' dogs — never more than ${PARK_CAPACITY} dogs in the park at once.`
+                : `The whole park and pool to your group, no other dogs. Charged for a minimum of ${PRIVATE_MIN_DOGS} dogs.`}
+            </p>
+          </fieldset>
+
+          <fieldset>
             <legend className={labelCls}>How many dogs?</legend>
             <div className="mt-3 flex flex-wrap gap-2">
-              {Array.from({ length: 6 }, (_, i) => i + 1).map((n) => (
-                <Choice
-                  key={n}
-                  selected={dogs === n}
-                  onClick={() => setDogs(n)}
-                  label={n === 6 ? "6+" : String(n)}
-                />
+              {Array.from({ length: MAX_DOGS }, (_, i) => i + 1).map((n) => (
+                <Choice key={n} selected={dogs === n} onClick={() => setDogs(n)} label={String(n)} />
               ))}
             </div>
-            {dogs >= 2 ? (
-              <p className="mt-2.5 text-xs leading-relaxed text-canopy-700">
-                Group sessions are for dogs who already know each other, booked by one party — we
-                don&apos;t mix unfamiliar dogs.
-              </p>
-            ) : null}
+          </fieldset>
+
+          <fieldset>
+            <legend className={labelCls}>Who&apos;s coming with them?</legend>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              <Counter label="12+ yrs" value={adults} onChange={setAdults} />
+              <Counter label="5–12 yrs" value={kids} onChange={setKids} />
+              <Counter label="Under 5" value={under5} onChange={setUnder5} />
+            </div>
+            <p className="mt-2.5 text-xs leading-relaxed opacity-65">
+              One person per dog comes free. Beyond that: under 5 free, 5–12 {rupees(CHILD_RATE)}/hr,
+              12+ {rupees(ADULT_RATE)}/hr.
+            </p>
           </fieldset>
 
           <fieldset>
@@ -182,19 +222,8 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
               )}
             </div>
             <p className="mt-2.5 text-xs opacity-65">
-              Four hours is the longest single block per crew. Book a fresh block after a break if
-              you want the whole day.
-            </p>
-          </fieldset>
-
-          <fieldset>
-            <legend className={labelCls}>Add the pool?</legend>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Choice selected={pool} onClick={() => setPool(true)} label="Yes, add the pool" />
-              <Choice selected={!pool} onClick={() => setPool(false)} label="Park only" />
-            </div>
-            <p className="mt-2.5 text-xs opacity-65">
-              +{rupees(POOL_RATE)} per dog per hour. 1,050 sq ft, shaped like a bone.
+              The bone pool is included. Dogs swim {POOL_SWIM_MINUTES} minutes at a time, then take a
+              break before going back in.
             </p>
           </fieldset>
 
@@ -286,28 +315,26 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
             </p>
             <p className="mt-4 font-display text-4xl font-semibold">{rupees(q.total)}</p>
             <p className="mt-2 text-sm opacity-80">
-              {dogs} dog{dogs > 1 ? "s" : ""} · {duration} hour{duration > 1 ? "s" : ""}
-              {pool ? " · pool included" : ""}
+              {mode === "private" ? "Private park" : "Shared park"} · {dogs} dog{dogs > 1 ? "s" : ""} ·{" "}
+              {duration} hour{duration > 1 ? "s" : ""} · pool included
             </p>
 
             <dl className="mt-6 space-y-2.5 border-t border-bone-50/20 pt-5 text-sm">
               <Row
-                label={`Session — ${rupees(q.rate)}/dog/hr`}
-                value={rupees(q.sessionTotal)}
+                label={`Dogs — ${rupees(q.dogRate)}/dog/hr${q.billedDogs > q.dogs ? ` × ${q.billedDogs} (min.)` : ""}`}
+                value={rupees(q.dogTotal)}
               />
-              {pool ? (
-                <Row label={`Pool — ${rupees(POOL_RATE)}/dog/hr`} value={rupees(q.poolTotal)} />
-              ) : null}
+              <Row
+                label={`People — ${q.freePlaces} free${q.chargedAdults ? ` · ${q.chargedAdults} × 12+` : ""}${q.chargedKids ? ` · ${q.chargedKids} × 5–12` : ""}`}
+                value={rupees(q.peopleTotal)}
+              />
             </dl>
 
-            <p
-              className={cx(
-                "mt-5 rounded-xl px-3.5 py-2.5 text-xs leading-relaxed",
-                q.discounted ? "bg-mango-400 text-floor-900" : "bg-bone-50/12",
-              )}
-            >
-              {q.reason}
-              {!q.discounted ? " Add an hour or a second dog and it drops to ₹750/dog/hr." : ""}
+            <p className="mt-5 rounded-xl bg-mango-400 px-3.5 py-2.5 text-xs leading-relaxed text-floor-900">
+              Introductory pricing.
+              {q.billedDogs > q.dogs
+                ? ` Private bookings are charged for at least ${PRIVATE_MIN_DOGS} dogs — the shared park is ${rupees(SHARED_RATE)}/dog/hr.`
+                : " One person per dog is always free."}
             </p>
 
             <div className="mt-6 space-y-3">
@@ -356,6 +383,33 @@ export function SessionPlanner({ compact = false }: { compact?: boolean }) {
         </div>
       </div>
     </Card>
+  );
+}
+
+function Counter({ label, value, onChange }: { label: string; value: number; onChange: (n: number) => void }) {
+  return (
+    <div className="rounded-xl border border-floor-900/15 bg-bone-50 p-2 text-center">
+      <p className="text-[11px] font-semibold tracking-wide text-floor-700 uppercase">{label}</p>
+      <div className="mt-1.5 flex items-center justify-between gap-1">
+        <button
+          type="button"
+          aria-label={`Fewer ${label}`}
+          onClick={() => onChange(Math.max(0, value - 1))}
+          className="h-8 w-8 rounded-full border border-floor-900/20 text-lg leading-none hover:bg-floor-900/5"
+        >
+          −
+        </button>
+        <span className="font-display text-xl font-semibold tabular-nums">{value}</span>
+        <button
+          type="button"
+          aria-label={`More ${label}`}
+          onClick={() => onChange(Math.min(30, value + 1))}
+          className="h-8 w-8 rounded-full border border-floor-900/20 text-lg leading-none hover:bg-floor-900/5"
+        >
+          +
+        </button>
+      </div>
+    </div>
   );
 }
 

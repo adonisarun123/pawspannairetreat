@@ -20,9 +20,9 @@ export const primaryNav: NavItem[] = [
     label: "Sessions & Pricing",
     href: "/sessions",
     children: [
-      { label: "Exclusive Sessions", href: "/sessions#exclusive" },
-      { label: "Group Sessions", href: "/sessions#group" },
-      { label: "Pool Add-On", href: "/sessions#pool" },
+      { label: "Shared Park", href: "/sessions#shared" },
+      { label: "Private Park", href: "/sessions#private" },
+      { label: "Bone Pool (included)", href: "/sessions#pool" },
       { label: "Puppy Sessions", href: "/sessions#puppy" },
     ],
   },

@@ -11,7 +11,7 @@ import {
   Title,
 } from "@/components/ui";
 import { media } from "@/lib/media";
-import { POOL_RATE, rupees } from "@/lib/pricing";
+import { SHARED_RATE, rupees } from "@/lib/pricing";
 import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { family, hours } from "@/lib/site";
 
@@ -59,7 +59,7 @@ export default function StayAtBsfPage() {
                 <Offer
                   headline={`2 hours in the park, with the pool — complimentary`}
                   body={`Included with every ${family.bsf.abbr} stay. It is deliberately not a fixed slot: the timing flexes around the park's day-visitor calendar, so the front desk fits you around the day's bookings rather than handing you a time you can't use.`}
-                  value={`Worth ${rupees(1500 + POOL_RATE * 2)} for one dog`}
+                  value={`Worth ${rupees(SHARED_RATE * 2)} for one dog`}
                 />
                 <Offer
                   headline="15% off your night at BSF or SSEK"

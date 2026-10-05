@@ -13,7 +13,7 @@ import {
 } from "@/components/ui";
 import { tyreElements } from "@/lib/content";
 import { media } from "@/lib/media";
-import { POOL_RATE, rupees } from "@/lib/pricing";
+import { PARK_CAPACITY, POOL_SWIM_MINUTES } from "@/lib/pricing";
 import { JsonLd, breadcrumbSchema, pageMeta } from "@/lib/seo";
 import { facts, family, hours } from "@/lib/site";
 
@@ -57,8 +57,8 @@ export default function ParkPage() {
                 usually the moment the day turns.
               </Lede>
               <div className="mt-7 flex flex-wrap gap-2">
-                <Pill>+{rupees(POOL_RATE)} per dog per hour</Pill>
-                <Pill>Add it to either session tier</Pill>
+                <Pill>Included with every session</Pill>
+                <Pill>{POOL_SWIM_MINUTES}-minute swims, then a break</Pill>
                 <Pill>Towels: bring your own</Pill>
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -179,8 +179,9 @@ export default function ParkPage() {
           </div>
 
           <p className="mt-8 max-w-3xl text-sm leading-relaxed opacity-70">
-            One rule sits behind all of this: we never mix dogs that don&apos;t already know each
-            other. Until a full-time on-site handler is in place, every slot belongs to one party.{" "}
+            One rule sits behind all of this: never more than {PARK_CAPACITY} dogs in the park at
+            once. Shared sessions are for friendly, vaccinated dogs; a private booking keeps other
+            dogs out of your slot.{" "}
             <Link
               href="/plan-your-visit/park-rules"
               className="underline underline-offset-4 hover:text-canopy-700"
