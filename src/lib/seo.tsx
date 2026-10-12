@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { faqs } from "./content";
+import { imageContentUrl } from "./imagekit";
 import { media } from "./media";
 import {
   ADULT_RATE,
@@ -362,7 +363,7 @@ export function imageGallerySchema(shots: { src: string | null; alt: string; cap
       .filter((s) => s.src)
       .map((s) => ({
         "@type": "ImageObject",
-        contentUrl: abs(s.src as string),
+        contentUrl: imageContentUrl(s.src as string, site.url),
         description: s.alt,
         caption: s.caption ?? s.alt,
         creditText: site.name,

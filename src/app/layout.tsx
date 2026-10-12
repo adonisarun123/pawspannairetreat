@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { preconnect } from "react-dom";
 import { ImageKitProvider } from "@imagekit/next";
 import { imagekitUrlEndpoint } from "@/lib/imagekit";
 import { site } from "@/lib/site";
@@ -45,6 +46,10 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Open the TLS connection to the image CDN during HTML parse, before the
+  // first <img> is discovered — shaves the DNS+TCP+TLS round trips off LCP.
+  if (imagekitUrlEndpoint) preconnect(new URL(imagekitUrlEndpoint).origin);
+
   // One provider at the root so no component repeats the URL endpoint.
   // Skipped entirely while ImageKit is unconfigured.
   const body = imagekitUrlEndpoint ? (
