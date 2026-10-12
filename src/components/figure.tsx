@@ -1,6 +1,13 @@
-import Image from "next/image";
+import NextImage from "next/image";
+import { Image as IKImage } from "@imagekit/next";
+import { imagekitEnabled } from "@/lib/imagekit";
 import type { MediaSlot } from "@/lib/media";
 import { cx } from "./ui";
+
+// ImageKit when NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is set (resize, format and
+// quality handled at the edge; urlEndpoint comes from the provider in the root
+// layout). Otherwise next/image serves the file from /public as before.
+const Image = imagekitEnabled ? IKImage : NextImage;
 
 /**
  * Renders a photograph, or — when the shot hasn't arrived yet — a quiet
