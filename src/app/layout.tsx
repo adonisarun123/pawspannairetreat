@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { preconnect } from "react-dom";
-import { ImageKitProvider } from "@imagekit/next";
 import { imagekitUrlEndpoint } from "@/lib/imagekit";
 import { site } from "@/lib/site";
 // Self-hosted variable fonts — no runtime call to Google, no CLS on first paint.
@@ -50,17 +49,9 @@ export default function RootLayout({
   // first <img> is discovered — shaves the DNS+TCP+TLS round trips off LCP.
   if (imagekitUrlEndpoint) preconnect(new URL(imagekitUrlEndpoint).origin);
 
-  // One provider at the root so no component repeats the URL endpoint.
-  // Skipped entirely while ImageKit is unconfigured.
-  const body = imagekitUrlEndpoint ? (
-    <ImageKitProvider urlEndpoint={imagekitUrlEndpoint}>{children}</ImageKitProvider>
-  ) : (
-    children
-  );
-
   return (
     <html lang="en-IN">
-      <body className="min-h-dvh antialiased">{body}</body>
+      <body className="min-h-dvh antialiased">{children}</body>
     </html>
   );
 }

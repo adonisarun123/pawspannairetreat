@@ -38,3 +38,29 @@ export function lqipUrl(src: string): string | null {
   if (!imagekitUrlEndpoint) return null;
   return `${imagekitUrlEndpoint}${ikPath(src)}?tr=w-32,q-30,bl-6,f-auto`;
 }
+
+/**
+ * Delivery formats, best first. Quality is per format because the encoders'
+ * quality scales differ: measured on the pool photograph at 640px, AVIF q-50
+ * (92 KB) is visually level with WebP q-75 (177 KB), while AVIF q-75 saved
+ * nothing. ImageKit's own `f-auto` applies one quality to every format, so
+ * the page negotiates with a <picture> instead.
+ */
+export const DELIVERY_FORMATS = [
+  { format: "avif", quality: 50, mime: "image/avif" },
+  { format: "webp", quality: 75, mime: "image/webp" },
+] as const;
+
+/** Widths offered in each srcset; ImageKit's c-at_max never upscales past the source. */
+const SRCSET_WIDTHS = [320, 480, 640, 750, 828, 1080, 1200, 1600];
+
+export function deliveryUrl(src: string, width: number, format: string, quality: number): string {
+  return `${imagekitUrlEndpoint}${ikPath(src)}?tr=f-${format},q-${quality},w-${width},c-at_max`;
+}
+
+/** srcset for one format, trimmed to the source's own width (plus one step to cover DPR rounding). */
+export function deliverySrcSet(src: string, sourceWidth: number, format: string, quality: number): string {
+  const cut = SRCSET_WIDTHS.findIndex((w) => w >= sourceWidth);
+  const widths = cut === -1 ? SRCSET_WIDTHS : SRCSET_WIDTHS.slice(0, cut + 1);
+  return widths.map((w) => `${deliveryUrl(src, w, format, quality)} ${w}w`).join(", ");
+}
