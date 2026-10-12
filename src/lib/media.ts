@@ -85,17 +85,19 @@ export const media = {
     caption: "Boundary signage and tyre bunting, both installed.",
   }),
 
-  // ------------------------------------------------------------- pending
   bonePool: slot({
-    id: "bone-pool",
-    src: null,
-    width: 1600,
-    height: 900,
+    id: "bone-pool-wide",
+    // 4:3 source shown in a 16:9 frame; the pool sits in the lower half.
+    focus: "50% 62%",
+    src: "/images/park/bone-pool.jpg",
+    width: 1448,
+    height: 1086,
     ratio: "16 / 9",
-    alt: "The bone-shaped swimming pool at Paws Pannai Retreat.",
-    brief:
-      "The pool from a raised angle so the bone shape reads clearly. Mid-morning, with a dog in the water if possible.",
+    alt: "The bone-shaped dog pool at Paws Pannai Retreat — turquoise tiled water edged in stone, under the trees.",
+    caption: "The Bone Pool, shaded by the canopy.",
   }),
+
+  // ------------------------------------------------------------- pending
   canopyTrail: slot({
     id: "canopy-trail",
     src: null,
