@@ -1,22 +1,15 @@
 import NextImage from "next/image";
-import { Image as IKImage, type Transformation } from "@imagekit/next";
-import { ikPath, imagekitEnabled, lqipUrl } from "@/lib/imagekit";
+import { preload } from "react-dom";
+import {
+  DELIVERY_FORMATS,
+  deliverySrcSet,
+  deliveryUrl,
+  ikPath,
+  imagekitEnabled,
+  lqipUrl,
+} from "@/lib/imagekit";
 import type { MediaSlot } from "@/lib/media";
 import { cx } from "./ui";
-
-// ImageKit when NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT is set (resize, format and
-// quality handled at the edge; urlEndpoint comes from the provider in the root
-// layout). Otherwise next/image serves the file from /public as before.
-const Image = imagekitEnabled ? IKImage : NextImage;
-
-/**
- * Applied to every ImageKit delivery URL. The SDK's loader appends `w-{n}`
- * and `c-at_max` per srcset candidate, so each browser width gets its own
- * exact size and nothing is ever upscaled.
- *  - format auto: AVIF/WebP for browsers that take them, JPEG otherwise.
- *  - quality 75: matches the next/image default we served before.
- */
-const IK_TRANSFORM: Transformation[] = [{ format: "auto", quality: 75 }];
 
 /**
  * Renders a photograph, or — when the shot hasn't arrived yet — a quiet
@@ -69,8 +62,10 @@ export function Figure({
             : null),
         }}
       >
-        {src ? (
-          <Image
+        {src && imagekitEnabled ? (
+          <Picture slot={slot} src={src} sizes={sizes} priority={priority} className={imgClassName} />
+        ) : src ? (
+          <NextImage
             src={src}
             alt={slot.alt}
             fill
@@ -79,7 +74,6 @@ export function Figure({
             loading={priority ? undefined : "lazy"}
             style={slot.focus ? { objectPosition: slot.focus } : undefined}
             className={cx("object-cover", imgClassName)}
-            {...(imagekitEnabled ? { transformation: IK_TRANSFORM } : null)}
           />
         ) : (
           <Placeholder alt={slot.alt} />
@@ -89,6 +83,67 @@ export function Figure({
         <figcaption className="mt-3 text-sm leading-snug opacity-70">{slot.caption}</figcaption>
       ) : null}
     </figure>
+  );
+}
+
+/**
+ * ImageKit delivery as a native <picture>: the browser picks the first format
+ * it decodes (AVIF, then WebP), each at the quality that suits that encoder,
+ * and the width that fits `sizes` × device pixel ratio. A JPEG `src` is the
+ * last resort for anything that understands neither.
+ *
+ * `priority` makes it the LCP candidate: fetched eagerly at high priority and
+ * announced with a preload hint so the download starts during HTML parse.
+ * The hint is typed AVIF — browsers that can't decode it ignore the hint and
+ * simply fetch WebP when they reach the <img>.
+ */
+function Picture({
+  slot,
+  src,
+  sizes,
+  priority,
+  className,
+}: {
+  slot: MediaSlot;
+  src: string;
+  sizes: string;
+  priority?: boolean;
+  className?: string;
+}) {
+  const fallback = deliveryUrl(src, 1200, "jpg", 75);
+  const sets = DELIVERY_FORMATS.map((f) => ({
+    mime: f.mime,
+    srcSet: deliverySrcSet(src, slot.width, f.format, f.quality),
+  }));
+
+  if (priority) {
+    preload(fallback, {
+      as: "image",
+      type: sets[0].mime,
+      imageSrcSet: sets[0].srcSet,
+      imageSizes: sizes,
+      fetchPriority: "high",
+    });
+  }
+
+  return (
+    <picture>
+      {sets.map((s) => (
+        <source key={s.mime} type={s.mime} srcSet={s.srcSet} sizes={sizes} />
+      ))}
+      <img
+        src={fallback}
+        alt={slot.alt}
+        width={slot.width}
+        height={slot.height}
+        sizes={sizes}
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
+        decoding="async"
+        style={slot.focus ? { objectPosition: slot.focus } : undefined}
+        className={cx("absolute inset-0 h-full w-full object-cover", className)}
+      />
+    </picture>
   );
 }
 
