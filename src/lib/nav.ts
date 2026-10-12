@@ -14,6 +14,7 @@ export const primaryNav: NavItem[] = [
       { label: "Trees & Forest", href: "/the-park#trees-and-forest" },
       { label: "Tyre Cafe", href: "/the-park#tyre-cafe" },
       { label: "Farm Walks", href: "/the-park/farm-walks" },
+      { label: "Gallery", href: "/gallery" },
     ],
   },
   {

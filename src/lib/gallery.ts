@@ -53,7 +53,8 @@ export const galleryPhotos: MediaSlot[] = [
   shot("bunting-across-the-lawn.png", P, "Bunting strung between the trees across the lawn.", "Party-ready."),
   shot("bone-pool.png", P, "The bone-shaped dog pool with turquoise water, edged in stone, trees around.", "The Bone Pool."),
   shot("bone-pool-far-end.png", P, "The bone-shaped pool from the far end.", "From the far end."),
-  shot("pool-under-the-trees.png", L, "The pool seen from under the trees.", "Shade over the water."),
+  // pool-under-the-trees.png is `media.bonePool` (served from /images/park),
+  // already in `galleryOrder` — listing it here too would show it twice.
   shot("kennels.png", L, "Three-compartment yellow steel kennels with pitched roofs.", "Rest kennels — shaded, separate."),
   shot("kennel-in-the-shade.png", P, "A yellow steel kennel block in the shade of the trees.", "Shade for a breather."),
   shot("water-station.png", P, "A two-bowl water station beside a stack of painted tyres.", "Water, always."),
